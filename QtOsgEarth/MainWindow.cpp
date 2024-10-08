@@ -16,7 +16,6 @@ MainWindow::MainWindow(QWidget* parent) :
 	setCentralWidget(g_osgEarthManager);
 	g_osgEarthManager->setupOsgEarth();
 	g_osgEarthManager->addFileLoaderListener(g_menuManager);
-	g_osgEarthManager->addFileLoaderListener(this);
 
 	installEventFilter(g_globalEventProvider);
 
@@ -35,27 +34,6 @@ MainWindow::~MainWindow()
 	g_menuManager->onClose();
 	g_osgEarthManager->onClose();
 }
-
-QString oldFileName = nullptr;
-void MainWindow::onFileLoadingEnd(const QString& fileName, bool success) {
-	if (success) {
-		if (!oldFileName.isEmpty())
-			fileWatcher.removePath(oldFileName);
-
-		oldFileName = g_osgEarthManager->activeFile;
-		fileWatcher.addPath(g_osgEarthManager->activeFile);
-
-		connect(&fileWatcher, &QFileSystemWatcher::fileChanged, this, &MainWindow::onCurrentFileChanged);
-
-	}
-}
-
-
-void MainWindow::onCurrentFileChanged()
-{
-	g_osgEarthManager->reloadEarthFile();
-}
-
 
 
 void MainWindow::addUpdateAble(UiUpdateAble* listener) {

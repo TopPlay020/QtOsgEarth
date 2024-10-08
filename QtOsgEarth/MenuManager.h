@@ -2,6 +2,7 @@
 
 #include "globals.h"
 #include "FileLoaderListener.h"
+#include <QFileSystemWatcher>
 #include <QMenuBar>
 #include <QAction>
 #include <QMenu>
@@ -26,7 +27,7 @@ private:
 	void setupRecentFilesMenu();
 	void setupStatusBar();
 
-
+	void refreshRecentFilesMenuWithNewFileName(QString fileName);
 
 
 	QMenu* fileMenu;
@@ -42,8 +43,12 @@ private:
 	QLabel* mouseLongitudeLabel;
 	QLabel* mouseAltitudeLabel;
 
+	QString oldFileName = nullptr;
+	QFileSystemWatcher fileWatcher;
+
 private slots:
 	void onLoadActionClick();
 	void onEditActionClick();
 	void onRevealFileExplorerActionClick();
+	void onCurrentFileChanged();
 };

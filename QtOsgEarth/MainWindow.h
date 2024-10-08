@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
-#include <QFileSystemWatcher>
 #include <osgEarth/Map>
 #include <osgEarth/MapNode>
 #include <osgEarth/Viewpoint>
@@ -14,26 +13,16 @@
 #include <UiUpdateAble.h>
 #include <FileLoaderListener.h>
 
-class MainWindow : public QMainWindow , public FileLoaderListener
+class MainWindow : public QMainWindow
 {
 	Q_OBJECT
 
 public:
 	explicit MainWindow(QWidget* parent = nullptr);
 	~MainWindow();
-
-	void onFileLoadingStart(const QString& fileName) override {};
-	void onFileLoadingEnd(const QString& fileName, bool success) override;
-	void onFileReloadingStart() override {};
-	void onFileReloadingEnd(bool success) override {};
-
-	QFileSystemWatcher fileWatcher;
-
+	
 	void addUpdateAble(UiUpdateAble* listener);
 	void removeUpdateAble(UiUpdateAble* listener);
-
-public slots:
-	void onCurrentFileChanged();
 
 private slots:
 	void notifyListeners();

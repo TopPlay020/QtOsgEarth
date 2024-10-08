@@ -125,6 +125,7 @@
     <ClInclude Include="GlobalEventListener.h" />
     <ClInclude Include="OsgEarthUtility.h" />
     <ClInclude Include="UiUpdateAble.h" />
+    <ClInclude Include="ui_QtOsgEarth.h" />
     <QtMoc Include="GlobalEventProvider.h" />
     <ClInclude Include="OsgEarthManager.h" />
   </ItemGroup>

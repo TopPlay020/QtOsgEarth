@@ -96,6 +96,20 @@ void MenuManager::onFileLoadingEnd(const QString& fileName, bool success) {
 	//change label in status bar 
 	activeFileNameLabel->setText(QFileInfo(fileName).fileName());
 
+	refreshRecentFilesMenuWithNewFileName(fileName);
+
+	if (!oldFileName.isEmpty())
+		fileWatcher.removePath(oldFileName);
+
+	oldFileName = g_osgEarthManager->activeFile;
+	fileWatcher.addPath(g_osgEarthManager->activeFile);
+
+	connect(&fileWatcher, &QFileSystemWatcher::fileChanged, this, &MenuManager::onCurrentFileChanged);
+
+}
+
+void MenuManager::refreshRecentFilesMenuWithNewFileName(QString fileName) {
+
 	// Check if the file is already in the list
 	QList<QAction*> actions = recentFilesMenu->actions();
 	for (auto action : actions) {
@@ -117,8 +131,6 @@ void MenuManager::onFileLoadingEnd(const QString& fileName, bool success) {
 	if (recentFilesMenu->actions().size() > maxRecentFiles) {
 		delete recentFilesMenu->actions().last();
 	}
-
-
 }
 
 void MenuManager::onLoadActionClick() {
@@ -147,6 +159,10 @@ void MenuManager::onClose() {
 		recentFiles.append(action->text());
 	}
 	settings.setValue("recentFiles", recentFiles);
+}
+
+void MenuManager::onCurrentFileChanged() {
+	g_osgEarthManager->reloadEarthFile();
 }
 
 void MenuManager::updateUi() {

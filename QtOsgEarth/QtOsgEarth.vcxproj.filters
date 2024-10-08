@@ -102,6 +102,9 @@
     <ClInclude Include="DistanceUtility.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="ui_QtOsgEarth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="Resource.qrc">

@@ -2,12 +2,13 @@
 
 #include "globals.h"
 #include "FileLoaderProvider.h"
-#include <osgEarth/PlaceNode>
 #include <OsgEarthUtility.h>
 
 class OsgEarthManager : public osgQOpenGLWidget, public FileLoaderProvider
 {
 public:
+	OsgEarthManager(QWidget* parent = nullptr) : osgQOpenGLWidget(parent) {};
+
 	void setupOsgEarth();
 
 	void loadEarthFile(const QString& fileName);
