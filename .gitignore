@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/onTest/QtOsgEarth.ui
+/onTest/user-history.db
+/QtOsgEarth.exe
+/onTest/symbology-style.db
