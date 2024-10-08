@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/Icons">
+        <file alias="File">icons/file.png</file>
+        <file alias="RecentFile">icons/recent_file.png</file>
+        <file alias="Edit">icons/edit.png</file>
+        <file alias="Folder">icons/folder.png</file>
+        <file alias="Distance">icons/distance.png</file>
+        <file alias="Math">icons/math.png</file>
+        <file alias="Copy">icons/copy.png</file>
+        <file alias="Earth">icons/earth.png</file>
+        <file alias="Label">icons/label.png</file>
+        <file alias="PlaceHolder">icons/placeholder.png</file>
+    </qresource>
+</RCC>
