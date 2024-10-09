@@ -10,5 +10,11 @@
         <file alias="Earth">icons/earth.png</file>
         <file alias="Label">icons/label.png</file>
         <file alias="PlaceHolder">icons/placeholder.png</file>
+        <file alias="Explorer">icons/explorer.png</file>
+        <file alias="globe-earth">icons/globe-earth.png</file>
+        <file alias="FeatureImageLayer">icons/FeatureImageLayer.png</file>
+        <file alias="GDALElevationLayer">icons/GDALElevationLayer.png</file>
+        <file alias="GDALImageLayer">icons/GDALImageLayer.png</file>
+        <file alias="OGRFeatureSource">icons/OGRFeatureSource.png</file>
     </qresource>
 </RCC>

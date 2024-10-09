@@ -3,9 +3,9 @@
 
 class FileLoaderListener {
 public:
-	virtual void onFileLoadingStart(const QString& fileName) = 0;
-	virtual void onFileReloadingStart() = 0;
-	virtual void onFileLoadingEnd(const QString& fileName, bool success) = 0;
-	virtual void onFileReloadingEnd(bool success) = 0;
+	virtual void onFileLoadingStart(const QString& fileName) {};
+	virtual void onFileReloadingStart(){};
+	virtual void onFileLoadingEnd(const QString& fileName, bool success){};
+	virtual void onFileReloadingEnd(bool success){};
 	virtual ~FileLoaderListener() = default;
 };

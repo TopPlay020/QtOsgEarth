@@ -59,6 +59,9 @@
     <ClCompile Include="ContextMenuManager.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="OsgTreeViewManager.cpp">
+      <Filter>Source Files\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GlobalEventProvider.h">
@@ -103,7 +106,10 @@
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="ui_QtOsgEarth.h">
-      <Filter>Header Files</Filter>
+      <Filter>Form Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OsgTreeViewManager.h">
+      <Filter>Header Files\Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,8 +14,6 @@ public:
 
 	void onFileLoadingStart(const QString& fileName) override;
 	void onFileLoadingEnd(const QString& fileName, bool success) override;
-	void onFileReloadingStart() override {};
-	void onFileReloadingEnd(bool success) override {};
 
 	void onClose();
 

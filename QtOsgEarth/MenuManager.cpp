@@ -8,7 +8,7 @@ void MenuManager::createMenu() {
 	setupRecentFilesMenu();
 	setupStatusBar();
 	g_mainWindow->addUpdateAble(this);
-
+	g_osgEarthManager->addFileLoaderListener(this);
 }
 
 

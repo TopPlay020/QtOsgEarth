@@ -110,6 +110,7 @@
     <ClCompile Include="MediaManager.cpp" />
     <ClCompile Include="MenuManager.cpp" />
     <ClCompile Include="OsgEarthManager.cpp" />
+    <ClCompile Include="OsgTreeViewManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h" />
@@ -124,6 +125,7 @@
     <ClInclude Include="MenuManager.h" />
     <ClInclude Include="GlobalEventListener.h" />
     <ClInclude Include="OsgEarthUtility.h" />
+    <ClInclude Include="OsgTreeViewManager.h" />
     <ClInclude Include="UiUpdateAble.h" />
     <ClInclude Include="ui_QtOsgEarth.h" />
     <QtMoc Include="GlobalEventProvider.h" />

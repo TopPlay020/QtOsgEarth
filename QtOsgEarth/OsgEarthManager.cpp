@@ -76,6 +76,7 @@ void OsgEarthManager::loadEarthFile(const QString& fileName) {
 		notifyFileReloadingEnd(true);
 	else
 		notifyFileLoadingEnd(fileName, true);
+
 }
 
 //By Me
@@ -146,31 +147,25 @@ void OsgEarthManager::adjustAltitudes(QList<osg::Vec3d>& points) {
 
 }
 
-osg::Vec3d OsgEarthManager::getPixelPosition(int mouseX, int mouseY)
-{
-	osg::Vec3d pos(0, 0, 0);
-	if (!viewer || !mapNode || !mapNode->getTerrain()) {
-		return pos;
-	}
+osgEarth::LayerVector OsgEarthManager::getLayers() {
+	osg::Group* group = earthNode->asGroup();
+	for (unsigned int i = 0; i < group->getNumChildren(); ++i)
+	{
+		osg::Node* childNode = group->getChild(i);
+		if (childNode && QString::fromStdString(childNode->getName()) != "")
+		{
+			osgEarth::Util::MapNode* mapNode = osgEarth::Util::MapNode::get(childNode);
+			if (mapNode)
+			{
+				osgEarth::Map* map = mapNode->getMap();
+				auto layerVectors = osgEarth::LayerVector();
+				map->getLayers(layerVectors);
+				return layerVectors;
+			}
 
-	mapNode->getTerrain()->getWorldCoordsUnderMouse(viewer, mouseX, mouseY, pos);
-	auto outputSrs = osgEarth::SpatialReference::create("EPSG:4326");
-	if (mapNode->isGeocentric())
-	{
-		osgEarth::GeoPoint map;
-		map.fromWorld(mapNode->getMapSRS(), pos);
-		map.transformInPlace(outputSrs);
-		pos = map.vec3d();
-		qDebug() << "First One";
+		}
 	}
-	else//Projected
-	{
-		qDebug() << "Secend One";
-		pos = osgEarth::GeoPoint(mapNode->getMapSRS(), pos).transform(outputSrs).vec3d();
-	}
-	return pos;
 }
-
 
 OsgLabel OsgEarthManager::addLabel(osg::Vec3d point, QString text)
 {

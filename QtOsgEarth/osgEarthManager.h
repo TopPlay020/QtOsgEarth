@@ -7,8 +7,6 @@
 class OsgEarthManager : public osgQOpenGLWidget, public FileLoaderProvider
 {
 public:
-	OsgEarthManager(QWidget* parent = nullptr) : osgQOpenGLWidget(parent) {};
-
 	void setupOsgEarth();
 
 	void loadEarthFile(const QString& fileName);
@@ -17,9 +15,9 @@ public:
 	osg::Vec3d getMouseCoordinatesInGeoPoint(int mouseX, int mouseY);
 	double getAltitude(double latitude, double longitude);
 	void adjustAltitudes(QList<osg::Vec3d>& points);
-	
-	osg::Vec3d getPixelPosition(int mouseX, int mouseY);
 
+	osgEarth::LayerVector getLayers();
+	
 	OsgLabel addLabel(osg::Vec3d point, QString text);
 	OsgLine addLine(osg::Vec3d pointStart, osg::Vec3d pointEnd);
 	OsgPolygon addPolygon(QList<osg::Vec3d>& points);

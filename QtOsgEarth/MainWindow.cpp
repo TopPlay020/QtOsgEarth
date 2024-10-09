@@ -1,6 +1,7 @@
 #include "globals.h"
 #include <QDesktopServices>
 #include <QTimer>
+#include <QHBoxLayout>
 
 
 MainWindow::MainWindow(QWidget* parent) :
@@ -10,17 +11,41 @@ MainWindow::MainWindow(QWidget* parent) :
 
 	g_mainWindow = this;
 	g_menuManager = new MenuManager();
-	g_menuManager->createMenu();
-
 	g_osgEarthManager = new OsgEarthManager();
-	setCentralWidget(g_osgEarthManager);
+	g_contextMenuManager = new ContextMenuManager();
+	g_osgTreeViewManager = new OsgTreeViewManager();
+
+	g_menuManager->createMenu();
 	g_osgEarthManager->setupOsgEarth();
-	g_osgEarthManager->addFileLoaderListener(g_menuManager);
+	g_contextMenuManager->createContextMenu();
+	g_osgTreeViewManager->createTreeView();
 
 	installEventFilter(g_globalEventProvider);
 
-	g_contextMenuManager = new ContextMenuManager();
-	g_contextMenuManager->createContextMenu();
+
+
+
+	auto sideBar = new QWidget();
+	auto sideBar_layout = new QHBoxLayout();
+	sideBar->setLayout(sideBar_layout);
+	sideBar_layout->addWidget(g_osgTreeViewManager);
+	sideBar_layout->addStretch();
+	sideBar_layout->setContentsMargins(0, 0, 0, 0);
+	//set sideBar fit explorer
+
+	auto mainContainer = new QWidget();
+	auto mainContainer_layout = new QHBoxLayout();
+	mainContainer->setLayout(mainContainer_layout);
+	mainContainer_layout->addWidget(sideBar);
+	mainContainer_layout->addWidget(g_osgEarthManager);
+	mainContainer_layout->setStretch(1, 1);
+
+
+	
+
+	setCentralWidget(mainContainer);
+
+
 
 	//init Global Timer
 	updateTimer = new QTimer(this);
