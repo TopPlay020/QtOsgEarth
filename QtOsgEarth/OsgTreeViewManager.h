@@ -22,10 +22,17 @@ public:
 		UnknownLayer
 	};
 	LayerType getLayerType(const char* layerType);
+	QString getLayerTypeName(LayerType layerType);
 
 private:
 	void setupView();
 	void reloadTree();
 
+	QStandardItemModel* model;
 	QStandardItem* rootNode;
+	QMap<LayerType, QStandardItem*> layerTreeNodes;
+	QMap<QStandardItem*, osgEarth::Layer*> layerNodes;
+
+private slots:
+	void onItemChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight, const QVector<int>& roles);
 };

@@ -57,6 +57,8 @@ void ContextMenuManager::onContextMenu() {
 	int mouseY = localMousePos.y();
 
 	contextMenuPoint = g_osgEarthManager->getMouseCoordinatesInGeoPoint(mouseX, mouseY);
+	if (contextMenuPoint.x() == 200)
+		return;
 	copyPositionAction->setText(QString("%1, %2, %3").arg(contextMenuPoint.x()).arg(contextMenuPoint.y()).arg(contextMenuPoint.z()));
 
 	QPoint globalPos = QCursor::pos();  // Get global mouse position

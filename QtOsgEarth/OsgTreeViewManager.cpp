@@ -1,21 +1,26 @@
 #include "globals.h"
+#include <osgEarth/ElevationLayer>
+#include <osgEarth/ImageLayer>
 
 void OsgTreeViewManager::createTreeView() {
 	g_osgEarthManager->addFileLoaderListener(this);
 	setupView();
+	layerTreeNodes = QMap<LayerType, QStandardItem*>();
+	layerNodes = QMap<QStandardItem*, osgEarth::Layer*>();
 }
 
 void OsgTreeViewManager::setupView() {
 	this->setHeaderHidden(true);
 
 	// Create a standard item model
-	auto model = new QStandardItemModel;
+	model = new QStandardItemModel;
+	connect(model, &QStandardItemModel::dataChanged, this, &OsgTreeViewManager::onItemChanged);
 
 	// Create root node
 	auto rootItem = model->invisibleRootItem();
 
 	// Create nodes
-	rootNode = new QStandardItem("Planat");
+	rootNode = new QStandardItem("Layers");
 
 	// Set icons for each item
 	rootNode->setIcon(g_mediaManager->getIcon("globe-earth"));
@@ -29,9 +34,9 @@ void OsgTreeViewManager::setupView() {
 	this->setModel(model);
 
 	QFont font = this->font();
-	font.setPointSize(12);
+	font.setPointSize(11);
 	this->setFont(font);
-	QSize iconSize(28, 28);
+	QSize iconSize(20, 20);
 	this->setIconSize(iconSize);
 
 	// Apply styles
@@ -43,7 +48,7 @@ void OsgTreeViewManager::setupView() {
 		"    outline: 0;"
 		"}"
 		"QTreeView::item {"
-		"    padding: 5px;" // Padding for items
+		"    padding: 3px;" // Padding for items
 		"}"
 		"QTreeView::item:hover {"
 		"    background-color: #e3f2fd;" // Hover color for items
@@ -73,31 +78,77 @@ OsgTreeViewManager::LayerType OsgTreeViewManager::getLayerType(const char* layer
 	}
 }
 
+QString OsgTreeViewManager::getLayerTypeName(LayerType layerType) {
+	switch (layerType)
+	{
+	case OsgTreeViewManager::GDALImageLayer:
+		return "GDALImageLayer";
+	case OsgTreeViewManager::GDALElevationLayer:
+		return "GDALElevationLayer";
+	case OsgTreeViewManager::FeatureImageLayer:
+		return "FeatureImageLayer";
+	case OsgTreeViewManager::OGRFeatureSource:
+		return "OGRFeatureSource";
+	case OsgTreeViewManager::UnknownLayer:
+		return "File";
+	}
+}
+
 void OsgTreeViewManager::reloadTree() {
 	auto layers = g_osgEarthManager->getLayers();
 	rootNode->removeRows(0, rootNode->rowCount());
 	for (auto layer : layers) {
 		auto item = new QStandardItem(layer->getName().c_str());
-		item->setFlags(Qt::ItemIsEnabled);
-		switch (getLayerType(layer.get()->getTypeName()))
-		{
-		case GDALImageLayer:
-			item->setIcon(g_mediaManager->getIcon("GDALImageLayer"));
-			break;
-		case GDALElevationLayer:
-			item->setIcon(g_mediaManager->getIcon("GDALElevationLayer"));
-			break;
-		case OGRFeatureSource:
-			item->setIcon(g_mediaManager->getIcon("OGRFeatureSource"));
-			break;
-		case FeatureImageLayer:
-			item->setIcon(g_mediaManager->getIcon("FeatureImageLayer"));
-			break;
-		default:
-			item->setIcon(g_mediaManager->getIcon("File"));
-			break;
+		auto layerType = getLayerType(layer.get()->getTypeName());
+		auto imageLayer = dynamic_cast<osgEarth::ImageLayer*>(layer.get());
+
+		if (!layerTreeNodes.contains(layerType)) {
+			auto newLayerNode = new QStandardItem(getLayerTypeName(layerType));
+			newLayerNode->setIcon(g_mediaManager->getIcon(getLayerTypeName(layerType)));
+			newLayerNode->setFlags(Qt::ItemIsEnabled);
+
+
+			rootNode->appendRow(newLayerNode);
+			layerTreeNodes[layerType] = newLayerNode;
 		}
-		rootNode->appendRow(item);
+
+		auto layerNode = layerTreeNodes[layerType];
+		item->setIcon(g_mediaManager->getIcon(getLayerTypeName(layerType)));
+
+		if (imageLayer)
+		{
+			item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
+			item->setData(Qt::Checked, Qt::CheckStateRole);
+
+		}
+		/*connect(model, &QStandardItemModel::dataChanged, [](const QModelIndex& topLeft, const QModelIndex& bottomRight, const QVector<int>& roles) {
+			if (roles.contains(Qt::CheckStateRole)) {
+				QStandardItem* item = static_cast<QStandardItemModel*>(topLeft.model())->itemFromIndex(topLeft);
+				if (item->checkState() == Qt::Checked) {
+					qDebug() << "Item checked:" << item->text();
+				}
+				else {
+					qDebug() << "Item unchecked:" << item->text();
+				}
+			}
+			});*/
+
+		layerNodes[item] = layer.get();
+		layerNode->appendRow(item);
 		qDebug() << layer.get()->getTypeName();
+	}
+}
+void OsgTreeViewManager::onItemChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight, const QVector<int>& roles) {
+	if (roles.contains(Qt::CheckStateRole)) {
+		auto item = model->itemFromIndex(topLeft);
+		auto imageLayer = dynamic_cast<osgEarth::ImageLayer*>(layerNodes[item]);
+		if (item->checkState() == Qt::Checked) {
+			if (imageLayer)
+				imageLayer->setVisible(true);
+		}
+		else {
+			if (imageLayer)
+				imageLayer->setVisible(false);
+		}
 	}
 }
