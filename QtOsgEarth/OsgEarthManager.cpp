@@ -2,6 +2,7 @@
 #include <QTimer>
 #include <osgEarth/GLUtils>
 #include <osgDB/ReadFile>
+#include <osgDB/WriteFile>
 #include <osgEarth/Sky>
 #include <QString>
 #include <osg/LineSegment>
@@ -77,6 +78,22 @@ void OsgEarthManager::loadEarthFile(const QString& fileName) {
 	else
 		notifyFileLoadingEnd(fileName, true);
 
+}
+
+void OsgEarthManager::saveEarthFile(const QString& fileName) {
+	if (earthNode) {
+		std::string outputFileName = fileName.toStdString();
+
+		// Check if the filename ends with ".earth" and append if necessary
+		std::size_t dotPosition = outputFileName.find_last_of('.');
+		if (dotPosition != std::string::npos)
+			outputFileName = outputFileName.substr(0, dotPosition);  // Remove current extension
+		
+		outputFileName += ".earth";
+
+		osgDB::Options* options = nullptr;
+		osgDB::writeNodeFile(*earthNode, outputFileName, options);
+	}
 }
 
 //By Me

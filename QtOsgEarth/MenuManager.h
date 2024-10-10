@@ -35,6 +35,7 @@ private:
 	QAction* loadAction;
 	QAction* editAction;
 	QAction* revealFileExplorerAction;
+	QAction* saveAsAction;
 
 	QLabel* activeFileNameLabel;
 	QLabel* mouseLatitudeLabel;
@@ -49,4 +50,5 @@ private slots:
 	void onEditActionClick();
 	void onRevealFileExplorerActionClick();
 	void onCurrentFileChanged();
+	void onSaveAsClick();
 };

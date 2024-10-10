@@ -13,6 +13,7 @@ public:
 	void onFileLoadingEnd(const QString& fileName, bool success) { onFileReloadingEnd(success); };
 	void onFileReloadingEnd(bool success) { reloadTree(); };
 
+	void reloadTree();
 
 	enum LayerType {
 		GDALImageLayer,
@@ -26,7 +27,6 @@ public:
 
 private:
 	void setupView();
-	void reloadTree();
 
 	QStandardItemModel* model;
 	QStandardItem* rootNode;

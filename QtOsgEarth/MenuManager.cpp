@@ -26,6 +26,13 @@ void MenuManager::setupFileMenu() {
 
 	fileMenu->addSeparator();
 
+	saveAsAction = fileMenu->addAction("&Save As");
+	saveAsAction->setIcon(g_mediaManager->getIcon("saveAs"));
+	QObject::connect(saveAsAction, &QAction::triggered, this, &MenuManager::onSaveAsClick);
+	saveAsAction->setEnabled(false);
+
+	fileMenu->addSeparator();
+
 	editAction = fileMenu->addAction("&Edit File");
 	editAction->setIcon(g_mediaManager->getIcon("Edit"));
 	QObject::connect(editAction, &QAction::triggered, this, &MenuManager::onEditActionClick);
@@ -92,6 +99,7 @@ void MenuManager::onFileLoadingEnd(const QString& fileName, bool success) {
 	fileMenu->setEnabled(true);
 	revealFileExplorerAction->setEnabled(true);
 	editAction->setEnabled(true);
+	saveAsAction->setEnabled(true);
 
 	//change label in status bar 
 	activeFileNameLabel->setText(QFileInfo(fileName).fileName());
@@ -149,6 +157,12 @@ void MenuManager::onRevealFileExplorerActionClick() {
 	QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.absolutePath()));
 }
 
+void MenuManager::onSaveAsClick() {
+	QString fileName = QFileDialog::getSaveFileName(g_mainWindow, "Save Earth File", "", "*.earth");
+	if (!fileName.isEmpty()) {
+		g_osgEarthManager->saveEarthFile(fileName);
+	}
+}
 
 void MenuManager::onClose() {
 	QSettings settings("EMP", "QtOsgEarth");

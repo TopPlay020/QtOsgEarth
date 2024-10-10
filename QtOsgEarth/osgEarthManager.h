@@ -10,6 +10,7 @@ public:
 	void setupOsgEarth();
 
 	void loadEarthFile(const QString& fileName);
+	void saveEarthFile(const QString& fileName);
 	void reloadEarthFile();
 
 	osg::Vec3d getMouseCoordinatesInGeoPoint(int mouseX, int mouseY);
