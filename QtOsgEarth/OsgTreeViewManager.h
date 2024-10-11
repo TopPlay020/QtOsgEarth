@@ -20,6 +20,8 @@ public:
 		GDALElevationLayer,
 		FeatureImageLayer,
 		OGRFeatureSource,
+		FeatureModelLayer,
+		AnnotationLayer,
 		UnknownLayer
 	};
 	LayerType getLayerType(const char* layerType);

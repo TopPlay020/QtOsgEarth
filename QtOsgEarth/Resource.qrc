@@ -17,5 +17,6 @@
         <file alias="GDALImageLayer">icons/GDALImageLayer.png</file>
         <file alias="OGRFeatureSource">icons/OGRFeatureSource.png</file>
         <file alias="saveAs">icons/saveAs.png</file>
+        <file alias="AnnotationLayer">icons/AnnotationLayer.png</file>
     </qresource>
 </RCC>

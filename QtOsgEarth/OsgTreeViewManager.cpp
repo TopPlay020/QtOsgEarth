@@ -1,6 +1,8 @@
 #include "globals.h"
 #include <osgEarth/ElevationLayer>
 #include <osgEarth/ImageLayer>
+#include <osgEarth/AnnotationLayer>
+
 
 void OsgTreeViewManager::createTreeView() {
 	g_osgEarthManager->addFileLoaderListener(this);
@@ -73,6 +75,12 @@ OsgTreeViewManager::LayerType OsgTreeViewManager::getLayerType(const char* layer
 	else if (std::strcmp(layerType, "class osgEarth::FeatureImageLayer") == 0) {
 		return FeatureImageLayer;
 	}
+	else if (std::strcmp(layerType, "class osgEarth::FeatureModelLayer") == 0) {
+		return FeatureModelLayer;
+	}
+	else if (std::strcmp(layerType, "class osgEarth::AnnotationLayer") == 0) {
+		return AnnotationLayer;
+	}
 	else {
 		return UnknownLayer;
 	}
@@ -89,18 +97,25 @@ QString OsgTreeViewManager::getLayerTypeName(LayerType layerType) {
 		return "FeatureImageLayer";
 	case OsgTreeViewManager::OGRFeatureSource:
 		return "OGRFeatureSource";
+	case OsgTreeViewManager::FeatureModelLayer:
+		return "FeatureModelLayer";
+	case OsgTreeViewManager::AnnotationLayer:
+		return "AnnotationLayer";
 	case OsgTreeViewManager::UnknownLayer:
 		return "File";
 	}
 }
 
 void OsgTreeViewManager::reloadTree() {
+	layerTreeNodes.clear();
+	layerNodes.clear();
+
 	auto layers = g_osgEarthManager->getLayers();
 	rootNode->removeRows(0, rootNode->rowCount());
 	for (auto layer : layers) {
 		auto item = new QStandardItem(layer->getName().c_str());
 		auto layerType = getLayerType(layer.get()->getTypeName());
-		auto imageLayer = dynamic_cast<osgEarth::ImageLayer*>(layer.get());
+		auto visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(layer.get());
 
 		if (!layerTreeNodes.contains(layerType)) {
 			auto newLayerNode = new QStandardItem(getLayerTypeName(layerType));
@@ -115,23 +130,12 @@ void OsgTreeViewManager::reloadTree() {
 		auto layerNode = layerTreeNodes[layerType];
 		item->setIcon(g_mediaManager->getIcon(getLayerTypeName(layerType)));
 
-		if (imageLayer)
+		if (visibleLayer)
 		{
 			item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
 			item->setData(Qt::Checked, Qt::CheckStateRole);
 
 		}
-		/*connect(model, &QStandardItemModel::dataChanged, [](const QModelIndex& topLeft, const QModelIndex& bottomRight, const QVector<int>& roles) {
-			if (roles.contains(Qt::CheckStateRole)) {
-				QStandardItem* item = static_cast<QStandardItemModel*>(topLeft.model())->itemFromIndex(topLeft);
-				if (item->checkState() == Qt::Checked) {
-					qDebug() << "Item checked:" << item->text();
-				}
-				else {
-					qDebug() << "Item unchecked:" << item->text();
-				}
-			}
-			});*/
 
 		layerNodes[item] = layer.get();
 		layerNode->appendRow(item);
@@ -141,14 +145,20 @@ void OsgTreeViewManager::reloadTree() {
 void OsgTreeViewManager::onItemChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight, const QVector<int>& roles) {
 	if (roles.contains(Qt::CheckStateRole)) {
 		auto item = model->itemFromIndex(topLeft);
-		auto imageLayer = dynamic_cast<osgEarth::ImageLayer*>(layerNodes[item]);
+		auto visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(layerNodes[item]);
+		auto annotationLayer = dynamic_cast<osgEarth::AnnotationLayer*>(layerNodes[item]);
+
 		if (item->checkState() == Qt::Checked) {
-			if (imageLayer)
-				imageLayer->setVisible(true);
+			if (annotationLayer)
+				annotationLayer->getNode()->setNodeMask(~0);
+			if (visibleLayer)
+				visibleLayer->setVisible(true);
 		}
 		else {
-			if (imageLayer)
-				imageLayer->setVisible(false);
+			if (annotationLayer)
+				annotationLayer->getNode()->setNodeMask(0);
+			if (visibleLayer)
+				visibleLayer->setVisible(false);
 		}
 	}
 }
