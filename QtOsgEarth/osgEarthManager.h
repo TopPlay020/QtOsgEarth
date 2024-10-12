@@ -2,9 +2,10 @@
 
 #include "globals.h"
 #include "FileLoaderProvider.h"
+#include "LayerEventProvider.h"
 #include <OsgEarthUtility.h>
 
-class OsgEarthManager : public osgQOpenGLWidget, public FileLoaderProvider
+class OsgEarthManager : public osgQOpenGLWidget, public FileLoaderProvider , public LayerEventProvider
 {
 public:
 	void setupOsgEarth();

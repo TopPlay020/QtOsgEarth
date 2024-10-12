@@ -10,7 +10,7 @@
 #include <osgEarth/Feature>
 #include <osgEarth/FeatureNode>
 #include <osgEarth/ElevationQuery>
-
+#include <osgEarth/AnnotationLayer>
 
 
 void OsgEarthManager::setupOsgEarth() {
@@ -186,13 +186,10 @@ osgEarth::LayerVector OsgEarthManager::getLayers() {
 
 OsgLabel OsgEarthManager::addLabel(osg::Vec3d point, QString text)
 {
-	if (!mapNode || !root)
-		return nullptr;
-
 	// Create a geographic position with the provided lat, long, alt
 	osgEarth::GeoPoint geoPoint(mapNode->getMapSRS(), point.x(), point.y(), point.z(), osgEarth::ALTMODE_ABSOLUTE);
 
-	// Create a style for the point (optional, you can customize it)
+	// Create a style for the point
 	osgEarth::Style style;
 
 	// Set the icon for the style
@@ -203,11 +200,19 @@ OsgLabel OsgEarthManager::addLabel(osg::Vec3d point, QString text)
 	// Create a place node (annotation)
 	osgEarth::PlaceNode* placeNode = new osgEarth::PlaceNode(geoPoint, text.toStdString(), style);
 
-	// Add the place node to the scene graph
-	mapNode->addChild(placeNode);
+	auto layer = new osgEarth::AnnotationLayer();
+	layer->setName(text.toStdString());
+	layer->addChild(placeNode);
+
+	layer->getConfig().children().push_back(placeNode->getConfig());
+	mapNode->getMap()->addLayer(layer); // osgEarth::MapNode*
+	qDebug() << placeNode->getConfig().toJSON(); // all Okey
+	qDebug() << layer->getConfig().toJSON(); // There is No INFORMATION About PlaceNode
+
+	notifyLayerAdd(layer);
 
 	//return Node
-	return OsgLabel(placeNode);
+	return OsgLabel(placeNode , layer);
 }
 
 OsgLine OsgEarthManager::addLine(osg::Vec3d pointStart, osg::Vec3d pointEnd) {

@@ -21,9 +21,6 @@
       <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
       <Extensions>ts</Extensions>
     </Filter>
-    <Filter Include="Header Files\FileLoader">
-      <UniqueIdentifier>{a9664d8b-551f-43dc-a6a8-6edbae0f4fbc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Manager">
       <UniqueIdentifier>{d9077258-6134-4d8b-8668-50fa7b7038ba}</UniqueIdentifier>
     </Filter>
@@ -33,7 +30,7 @@
     <Filter Include="Source Files\Manager">
       <UniqueIdentifier>{2de9967f-6b0a-420f-89e7-2f75e5a9bc00}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\EventHandler">
+    <Filter Include="Header Files\EventHandlers">
       <UniqueIdentifier>{316de0da-ded0-41cf-9920-75990e5db641}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -65,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GlobalEventProvider.h">
-      <Filter>Header Files\EventHandler</Filter>
+      <Filter>Header Files\EventHandlers</Filter>
     </QtMoc>
     <QtMoc Include="MainWindow.h">
       <Filter>Header Files</Filter>
@@ -73,13 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlobalEventListener.h">
-      <Filter>Header Files\EventHandler</Filter>
-    </ClInclude>
-    <ClInclude Include="FileLoaderListener.h">
-      <Filter>Header Files\FileLoader</Filter>
-    </ClInclude>
-    <ClInclude Include="FileLoaderProvider.h">
-      <Filter>Header Files\FileLoader</Filter>
+      <Filter>Header Files\EventHandlers</Filter>
     </ClInclude>
     <ClInclude Include="MenuManager.h">
       <Filter>Header Files\Manager</Filter>
@@ -110,6 +101,18 @@
     </ClInclude>
     <ClInclude Include="OsgTreeViewManager.h">
       <Filter>Header Files\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="FileLoaderListener.h">
+      <Filter>Header Files\EventHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="FileLoaderProvider.h">
+      <Filter>Header Files\EventHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="LayerEventListener.h">
+      <Filter>Header Files\EventHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="LayerEventProvider.h">
+      <Filter>Header Files\EventHandlers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

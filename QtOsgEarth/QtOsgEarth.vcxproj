@@ -121,6 +121,8 @@
     <ClInclude Include="FileLoaderProvider.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="FileLoaderListener.h" />
+    <ClInclude Include="LayerEventListener.h" />
+    <ClInclude Include="LayerEventProvider.h" />
     <ClInclude Include="MediaManager.h" />
     <ClInclude Include="MenuManager.h" />
     <ClInclude Include="GlobalEventListener.h" />

@@ -1,6 +1,7 @@
 #pragma once
 #include <osgEarth/PlaceNode>
 #include <osgUtil/LineSegmentIntersector>
+#include <osgEarth/AnnotationLayer>
 #include <osgEarth/Feature>
 #include <osgEarth/FeatureNode>
 #include <qstring.h>
@@ -13,17 +14,19 @@ public:
 
 class OsgLabel : public OsgNodeAdapter {
 public:
-	OsgLabel(osgEarth::PlaceNode* node) : node(node) {};
+	OsgLabel(osgEarth::PlaceNode* node , osgEarth::AnnotationLayer* layer) : node(node),layer(layer) {};
 	void setText(QString text) {
 		node->setText(text.toStdString());
+		layer->setName(text.toStdString());
 		update();
 	};
 	osg::Node* getNode() override { return dynamic_cast<osg::Node*>(node); };
 private:
 	osgEarth::PlaceNode* node;
+	osgEarth::AnnotationLayer* layer;
 
 	void update() {
-		auto parent = node->getParent(0);
+		auto parent = node->getParent(0); 
 		auto geoPoint = node->getPosition();
 		auto style = node->getStyle();
 		auto text = node->getText();

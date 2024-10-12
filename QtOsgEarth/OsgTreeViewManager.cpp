@@ -5,10 +5,13 @@
 
 
 void OsgTreeViewManager::createTreeView() {
-	g_osgEarthManager->addFileLoaderListener(this);
 	setupView();
-	layerTreeNodes = QMap<LayerType, QStandardItem*>();
-	layerNodes = QMap<QStandardItem*, osgEarth::Layer*>();
+	layerTypeToNodeMap = QMap<LayerType, QStandardItem*>();
+	nodeToLayerMap = QMap<QStandardItem*, osgEarth::Layer*>();
+	layerToNodeMap = QMap<osgEarth::Layer*, QStandardItem*>();
+
+	g_osgEarthManager->addFileLoaderListener(this);
+	g_osgEarthManager->addLayerEventListener(this);
 }
 
 void OsgTreeViewManager::setupView() {
@@ -107,50 +110,31 @@ QString OsgTreeViewManager::getLayerTypeName(LayerType layerType) {
 }
 
 void OsgTreeViewManager::reloadTree() {
-	layerTreeNodes.clear();
-	layerNodes.clear();
+	layerTypeToNodeMap.clear();
+	nodeToLayerMap.clear();
+	layerToNodeMap.clear();
 
 	auto layers = g_osgEarthManager->getLayers();
 	rootNode->removeRows(0, rootNode->rowCount());
 	for (auto layer : layers) {
-		auto item = new QStandardItem(layer->getName().c_str());
-		auto layerType = getLayerType(layer.get()->getTypeName());
-		auto visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(layer.get());
-
-		if (!layerTreeNodes.contains(layerType)) {
-			auto newLayerNode = new QStandardItem(getLayerTypeName(layerType));
-			newLayerNode->setIcon(g_mediaManager->getIcon(getLayerTypeName(layerType)));
-			newLayerNode->setFlags(Qt::ItemIsEnabled);
-
-
-			rootNode->appendRow(newLayerNode);
-			layerTreeNodes[layerType] = newLayerNode;
-		}
-
-		auto layerNode = layerTreeNodes[layerType];
-		item->setIcon(g_mediaManager->getIcon(getLayerTypeName(layerType)));
-
-		if (visibleLayer)
-		{
-			item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
-			item->setData(Qt::Checked, Qt::CheckStateRole);
-
-		}
-
-		layerNodes[item] = layer.get();
-		layerNode->appendRow(item);
+		onLayerAdd(layer);
 		qDebug() << layer.get()->getTypeName();
 	}
 }
+
 void OsgTreeViewManager::onItemChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight, const QVector<int>& roles) {
 	if (roles.contains(Qt::CheckStateRole)) {
 		auto item = model->itemFromIndex(topLeft);
-		auto visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(layerNodes[item]);
-		auto annotationLayer = dynamic_cast<osgEarth::AnnotationLayer*>(layerNodes[item]);
+		auto visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(nodeToLayerMap[item]);
+		auto annotationLayer = dynamic_cast<osgEarth::AnnotationLayer*>(nodeToLayerMap[item]);
 
 		if (item->checkState() == Qt::Checked) {
 			if (annotationLayer)
+			{
 				annotationLayer->getNode()->setNodeMask(~0);
+				//qDebug() << dynamic_cast<osgEarth::PlaceNode*>(annotationLayer->getGroup()->getChild(0)->asGroup()->getChild(0))->getConfig().toJSON();
+				qDebug() << annotationLayer->getConfig().toJSON();
+			}
 			if (visibleLayer)
 				visibleLayer->setVisible(true);
 		}
@@ -161,4 +145,50 @@ void OsgTreeViewManager::onItemChanged(const QModelIndex& topLeft, const QModelI
 				visibleLayer->setVisible(false);
 		}
 	}
+}
+
+void OsgTreeViewManager::onLayerAdd(osgEarth::Layer* layer) {
+	auto item = new QStandardItem(layer->getName().c_str());
+	auto layerType = getLayerType(layer->getTypeName());
+	auto visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(layer);
+
+	if (!layerTypeToNodeMap.contains(layerType)) {
+		auto newLayerNode = new QStandardItem(getLayerTypeName(layerType));
+		newLayerNode->setIcon(g_mediaManager->getIcon(getLayerTypeName(layerType)));
+		newLayerNode->setFlags(Qt::ItemIsEnabled);
+
+
+		rootNode->appendRow(newLayerNode);
+		layerTypeToNodeMap[layerType] = newLayerNode;
+	}
+
+	auto layerNode = layerTypeToNodeMap[layerType];
+	item->setIcon(g_mediaManager->getIcon(getLayerTypeName(layerType)));
+
+	if (visibleLayer)
+	{
+		item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
+		item->setData(Qt::Checked, Qt::CheckStateRole);
+
+	}
+
+	nodeToLayerMap[item] = layer;
+	layerToNodeMap[layer] = item;
+	layerNode->appendRow(item);
+}
+
+void OsgTreeViewManager::onLayerUpdate(osgEarth::Layer* layer) {
+	auto layerType = getLayerType(layer->getTypeName());
+	auto rootNode = layerTypeToNodeMap[layerType];
+	auto layerNode = layerToNodeMap[layer];
+	
+	//TODO:: WTF is that i need to change it srx !!! (i dont have time !!!!)
+	for (int i = 0; i < rootNode->rowCount(); ++i) {
+		QStandardItem* child = rootNode->child(i);
+		if (child == layerNode) {
+			layerNode->removeRow(i);
+			break;
+		}
+	}
+
 }
