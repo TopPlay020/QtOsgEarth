@@ -5,5 +5,6 @@
 - Distance calculation
 - Adding customizable labels
 - Loding .earth Files
+- Manage Layers
 
 This project seeks to provide intuitive and efficient tools for geographic data representation and analysis.
