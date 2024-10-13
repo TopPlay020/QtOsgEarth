@@ -33,6 +33,12 @@
     <Filter Include="Header Files\EventHandlers">
       <UniqueIdentifier>{316de0da-ded0-41cf-9920-75990e5db641}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ContextMenu">
+      <UniqueIdentifier>{db782dc0-84b1-4c81-ab97-2559c6902282}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ContextMenu">
+      <UniqueIdentifier>{bb67af24-6e4f-4844-b649-a9648d905cdc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -53,11 +59,14 @@
     <ClCompile Include="MediaManager.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="ContextMenuManager.cpp">
-      <Filter>Source Files\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="OsgTreeViewManager.cpp">
       <Filter>Source Files\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="OsgEarthContextMenu.cpp">
+      <Filter>Source Files\ContextMenu</Filter>
+    </ClCompile>
+    <ClCompile Include="OsgTreeViewContextMenu.cpp">
+      <Filter>Source Files\ContextMenu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -87,9 +96,6 @@
     <ClInclude Include="MediaManager.h">
       <Filter>Header Files\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="ContextMenuManager.h">
-      <Filter>Header Files\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="OsgEarthUtility.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
@@ -113,6 +119,12 @@
     </ClInclude>
     <ClInclude Include="LayerEventProvider.h">
       <Filter>Header Files\EventHandlers</Filter>
+    </ClInclude>
+    <ClInclude Include="OsgEarthContextMenu.h">
+      <Filter>Header Files\ContextMenu</Filter>
+    </ClInclude>
+    <ClInclude Include="OsgTreeViewContextMenu.h">
+      <Filter>Header Files\ContextMenu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

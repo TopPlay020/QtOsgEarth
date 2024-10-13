@@ -103,20 +103,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ContextMenuManager.cpp" />
+    <ClCompile Include="OsgEarthContextMenu.cpp" />
     <ClCompile Include="globals.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="MediaManager.cpp" />
     <ClCompile Include="MenuManager.cpp" />
     <ClCompile Include="OsgEarthManager.cpp" />
+    <ClCompile Include="OsgTreeViewContextMenu.cpp" />
     <ClCompile Include="OsgTreeViewManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ContextMenuManager.h" />
+    <ClInclude Include="OsgEarthContextMenu.h" />
     <ClInclude Include="DistanceUtility.h" />
     <ClInclude Include="FileLoaderProvider.h" />
     <ClInclude Include="globals.h" />
@@ -127,6 +128,7 @@
     <ClInclude Include="MenuManager.h" />
     <ClInclude Include="GlobalEventListener.h" />
     <ClInclude Include="OsgEarthUtility.h" />
+    <ClInclude Include="OsgTreeViewContextMenu.h" />
     <ClInclude Include="OsgTreeViewManager.h" />
     <ClInclude Include="UiUpdateAble.h" />
     <ClInclude Include="ui_QtOsgEarth.h" />

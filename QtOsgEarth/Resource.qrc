@@ -18,5 +18,7 @@
         <file alias="OGRFeatureSource">icons/OGRFeatureSource.png</file>
         <file alias="saveAs">icons/saveAs.png</file>
         <file alias="AnnotationLayer">icons/AnnotationLayer.png</file>
+        <file alias="layerName">icons/layerName.png</file>
+        <file alias="layerRemove">icons/layerRemove.png</file>
     </qresource>
 </RCC>

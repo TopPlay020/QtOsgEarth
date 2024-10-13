@@ -7,7 +7,7 @@
 #include <osg/Vec3d>
 #include <OsgEarthUtility.h>
 
-class ContextMenuManager : public QObject, public GlobalEventListener , public UiUpdateAble {
+class OsgEarthContextMenu : public QObject, public GlobalEventListener , public UiUpdateAble {
 public:
 	void createContextMenu();
 

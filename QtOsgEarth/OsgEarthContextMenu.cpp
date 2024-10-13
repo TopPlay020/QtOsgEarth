@@ -1,15 +1,16 @@
 #include <globals.h>
+#include <OsgEarthContextMenu.h>
 #include <QClipboard>
 #include <QApplication>
 #include <QInputDialog>
 #include <DistanceUtility.h>
 
-void ContextMenuManager::createContextMenu() {
+void OsgEarthContextMenu::createContextMenu() {
 	viewerContextMenu = new QMenu(g_mainWindow);
 
 	addLabelAction = new QAction("&add Label", g_mainWindow);
 	addLabelAction->setIcon(g_mediaManager->getIcon("Label"));
-	QObject::connect(addLabelAction, &QAction::triggered, this, &ContextMenuManager::onAddLabelAction);
+	QObject::connect(addLabelAction, &QAction::triggered, this, &OsgEarthContextMenu::onAddLabelAction);
 	viewerContextMenu->addAction(addLabelAction);
 
 
@@ -41,7 +42,7 @@ void ContextMenuManager::createContextMenu() {
 	copyPositionAction = new QAction("&Copy Position", g_mainWindow);
 	copyPositionAction->setIcon(g_mediaManager->getIcon("Copy"));
 
-	QObject::connect(copyPositionAction, &QAction::triggered, this, &ContextMenuManager::onCopyPositionAction);
+	QObject::connect(copyPositionAction, &QAction::triggered, this, &OsgEarthContextMenu::onCopyPositionAction);
 
 	viewerContextMenu->addAction(copyPositionAction);
 
@@ -49,7 +50,7 @@ void ContextMenuManager::createContextMenu() {
 	g_mainWindow->addUpdateAble(this);
 }
 
-void ContextMenuManager::onContextMenu() {
+void OsgEarthContextMenu::onContextMenu() {
 	QPoint globalMousePos = QCursor::pos();
 	QPoint localMousePos = g_osgEarthManager->mapFromGlobal(globalMousePos);
 
@@ -65,8 +66,7 @@ void ContextMenuManager::onContextMenu() {
 	viewerContextMenu->exec(globalPos); // Show the menu at the top-left of the mouse position
 }
 
-void ContextMenuManager::onAddLabelAction() {
-	OsgLabel label = g_osgEarthManager->addLabel(contextMenuPoint, "Label");
+void OsgEarthContextMenu::onAddLabelAction() {
 	bool ok; // to check if the user pressed OK
 	QString labelName = QInputDialog::getText(nullptr,
 		"Input Label Name",
@@ -76,22 +76,20 @@ void ContextMenuManager::onAddLabelAction() {
 		&ok);
 	if (ok)
 		if (!labelName.isEmpty())
-			label.setText(labelName);
+			g_osgEarthManager->addLabel(contextMenuPoint, labelName);
 		else
-			label.setText("Empty Label");
-	else
-		g_osgEarthManager->removeNode(label);
+			g_osgEarthManager->addLabel(contextMenuPoint, "Empty Label");
 
 }
 
-void ContextMenuManager::onCopyPositionAction() {
+void OsgEarthContextMenu::onCopyPositionAction() {
 	QString actionText = copyPositionAction->text();
 	QClipboard* clipboard = QApplication::clipboard();
 	clipboard->setText(actionText);
 }
 
 
-void ContextMenuManager::onDistanceAction() {
+void OsgEarthContextMenu::onDistanceAction() {
 	if (!isCommandInWork) {
 		//Step 01
 		isCommandInWork = true;
@@ -145,7 +143,7 @@ void ContextMenuManager::onDistanceAction() {
 }
 
 
-void ContextMenuManager::updateUi() {
+void OsgEarthContextMenu::updateUi() {
 	if (isCommandInWork) {
 		if (isDistanceAction) {
 			QPoint globalMousePos = QCursor::pos();
@@ -159,7 +157,7 @@ void ContextMenuManager::updateUi() {
 	}
 }
 
-void ContextMenuManager::onMouseLeftRelese() {
+void OsgEarthContextMenu::onMouseLeftRelese() {
 	if (isCommandInWork) {
 		if (isDistanceAction) {
 			onDistanceAction();

@@ -1,4 +1,6 @@
 #include "globals.h"
+#include "OsgEarthContextMenu.h";
+#include "OsgTreeViewContextMenu.h"
 #include <QDesktopServices>
 #include <QTimer>
 #include <QHBoxLayout>
@@ -12,13 +14,14 @@ MainWindow::MainWindow(QWidget* parent) :
 	g_mainWindow = this;
 	g_menuManager = new MenuManager();
 	g_osgEarthManager = new OsgEarthManager();
-	g_contextMenuManager = new ContextMenuManager();
 	g_osgTreeViewManager = new OsgTreeViewManager();
 
 	g_menuManager->createMenu();
 	g_osgEarthManager->setupOsgEarth();
-	g_contextMenuManager->createContextMenu();
 	g_osgTreeViewManager->createTreeView();
+
+	(new OsgEarthContextMenu())->createContextMenu();
+	(new OsgTreeViewContextMenu())->createContextMenu();
 
 	installEventFilter(g_globalEventProvider);
 

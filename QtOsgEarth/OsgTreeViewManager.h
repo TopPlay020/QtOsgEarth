@@ -32,10 +32,10 @@ public:
 	LayerType getLayerType(const char* layerType);
 	QString getLayerTypeName(LayerType layerType);
 
+	QStandardItemModel* model;
 private:
 	void setupView();
 
-	QStandardItemModel* model;
 	QStandardItem* rootNode;
 	QMap<LayerType, QStandardItem*> layerTypeToNodeMap;
 	QMap<osgEarth::Layer*, QStandardItem*> layerToNodeMap;

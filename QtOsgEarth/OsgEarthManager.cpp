@@ -203,11 +203,12 @@ OsgLabel OsgEarthManager::addLabel(osg::Vec3d point, QString text)
 	auto layer = new osgEarth::AnnotationLayer();
 	layer->setName(text.toStdString());
 	layer->addChild(placeNode);
+	mapNode->getMap()->addLayer(layer);
 
-	layer->getConfig().children().push_back(placeNode->getConfig());
-	mapNode->getMap()->addLayer(layer); // osgEarth::MapNode*
-	qDebug() << placeNode->getConfig().toJSON(); // all Okey
-	qDebug() << layer->getConfig().toJSON(); // There is No INFORMATION About PlaceNode
+	//qDebug() << layer->getOsgOptionString();
+
+	//qDebug() << placeNode->getConfig().toJSON(); // all Okey
+	//qDebug() << layer->getConfig().toJSON(); // There is No INFORMATION About PlaceNode
 
 	notifyLayerAdd(layer);
 
