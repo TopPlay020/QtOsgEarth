@@ -171,7 +171,7 @@ void OsgTreeViewManager::onLayerAdd(osgEarth::Layer* layer) {
 	auto layerType = getLayerType(layer->getTypeName());
 	auto visibleLayer = dynamic_cast<osgEarth::VisibleLayer*>(layer);
 
-	if (!layerTypeToNodeMap.contains(layerType)) {
+	if (!layerTypeToNodeMap.contains(layerType) || layerTypeToNodeMap[layerType] == nullptr) {
 		auto newLayerNode = new QStandardItem(getLayerTypeName(layerType));
 		newLayerNode->setIcon(g_mediaManager->getIcon(getLayerTypeName(layerType)));
 		newLayerNode->setFlags(Qt::ItemIsEnabled);
