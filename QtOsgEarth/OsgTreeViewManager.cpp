@@ -2,6 +2,11 @@
 #include <osgEarth/ElevationLayer>
 #include <osgEarth/ImageLayer>
 #include <osgEarth/AnnotationLayer>
+#include <osgEarth/ImageLayer>
+#include <osgEarth/ElevationLayer>
+#include <osgEarth/OGRFeatureSource>
+#include <osgEarth/FeatureImageLayer>
+#include <osgEarth/FeatureModelLayer>
 
 
 void OsgTreeViewManager::createTreeView() {
@@ -85,6 +90,17 @@ OsgTreeViewManager::LayerType OsgTreeViewManager::getLayerType(const char* layer
 	else if (std::strcmp(layerType, "class osgEarth::AnnotationLayer") == 0)  return AnnotationLayer;
 	else  return UnknownLayer;
 }
+
+
+//OsgTreeViewManager::LayerType OsgTreeViewManager::getLayerType(const char* layerType) {
+//	if		(std::strcmp(layerType, "class osgEarth::GDALImageLayer")		== 0)  return GDALImageLayer;
+//	else if (std::strcmp(layerType, "class osgEarth::GDALElevationLayer")	== 0)  return GDALElevationLayer;
+//	else if (std::strcmp(layerType, "class osgEarth::OGRFeatureSource")		== 0)  return OGRFeatureSource;
+//	else if (std::strcmp(layerType, "class osgEarth::FeatureImageLayer")	== 0)  return FeatureImageLayer;
+//	else if (std::strcmp(layerType, "class osgEarth::FeatureModelLayer")	== 0)  return FeatureModelLayer;
+//	else if (std::strcmp(layerType, "class osgEarth::AnnotationLayer")		== 0)  return AnnotationLayer;
+//	else  return UnknownLayer;
+//}
 
 QString OsgTreeViewManager::getLayerTypeName(LayerType layerType) {
 	switch (layerType) {
