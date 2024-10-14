@@ -17,6 +17,8 @@ private:
 	QAction* changeLayerNameAction;
 	QAction* removeLayerAction;
 
+	QStandardItem* selectedItem;
+
 private slots:
 	void onChangeLayerNameAction();
 	void onRemoveLayerAction();

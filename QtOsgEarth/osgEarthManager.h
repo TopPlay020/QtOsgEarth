@@ -22,6 +22,10 @@ public:
 	
 	OsgLabel addLabel(osg::Vec3d point, QString text);
 	OsgLine addLine(osg::Vec3d pointStart, osg::Vec3d pointEnd);
+
+	void addLayer(osgEarth::Layer* layer);
+	void removeLayer(osgEarth::Layer* layer);
+
 	OsgPolygon addPolygon(QList<osg::Vec3d>& points);
 	void removeNode(OsgNodeAdapter& nodeAdapter) { removeNode(nodeAdapter.getNode()); };
 	void removeNode(osg::Node* node);

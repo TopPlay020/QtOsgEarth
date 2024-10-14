@@ -65,47 +65,36 @@ void OsgTreeViewManager::setupView() {
 	);
 }
 
+//OsgTreeViewManager::LayerType OsgTreeViewManager::getLayerType(osgEarth::Layer* layer) {
+//	if (dynamic_cast<osgEarth::ImageLayer*>(layer)) return GDALImageLayer;
+//	else if (dynamic_cast<osgEarth::ElevationLayer*>(layer)) return GDALElevationLayer;
+//	else if (dynamic_cast<osgEarth::OGRFeatureSource*>(layer)) return OGRFeatureSource;
+//	else if (dynamic_cast<osgEarth::FeatureImageLayer*>(layer)) return FeatureImageLayer;
+//	else if (dynamic_cast<osgEarth::FeatureModelLayer*>(layer)) return FeatureModelLayer;
+//	else if (dynamic_cast<osgEarth::AnnotationLayer*>(layer)) return AnnotationLayer;
+//	else return UnknownLayer;
+//}
+
+
 OsgTreeViewManager::LayerType OsgTreeViewManager::getLayerType(const char* layerType) {
-	if (std::strcmp(layerType, "class osgEarth::GDALImageLayer") == 0) {
-		return GDALImageLayer;
-	}
-	else if (std::strcmp(layerType, "class osgEarth::GDALElevationLayer") == 0) {
-		return GDALElevationLayer;
-	}
-	else if (std::strcmp(layerType, "class osgEarth::OGRFeatureSource") == 0) {
-		return OGRFeatureSource;
-	}
-	else if (std::strcmp(layerType, "class osgEarth::FeatureImageLayer") == 0) {
-		return FeatureImageLayer;
-	}
-	else if (std::strcmp(layerType, "class osgEarth::FeatureModelLayer") == 0) {
-		return FeatureModelLayer;
-	}
-	else if (std::strcmp(layerType, "class osgEarth::AnnotationLayer") == 0) {
-		return AnnotationLayer;
-	}
-	else {
-		return UnknownLayer;
-	}
+	if (std::strcmp(layerType, "class osgEarth::GDALImageLayer") == 0)  return GDALImageLayer;
+	else if (std::strcmp(layerType, "class osgEarth::GDALElevationLayer") == 0)  return GDALElevationLayer;
+	else if (std::strcmp(layerType, "class osgEarth::OGRFeatureSource") == 0)  return OGRFeatureSource;
+	else if (std::strcmp(layerType, "class osgEarth::FeatureImageLayer") == 0)  return FeatureImageLayer;
+	else if (std::strcmp(layerType, "class osgEarth::FeatureModelLayer") == 0)  return FeatureModelLayer;
+	else if (std::strcmp(layerType, "class osgEarth::AnnotationLayer") == 0)  return AnnotationLayer;
+	else  return UnknownLayer;
 }
 
 QString OsgTreeViewManager::getLayerTypeName(LayerType layerType) {
-	switch (layerType)
-	{
-	case OsgTreeViewManager::GDALImageLayer:
-		return "GDALImageLayer";
-	case OsgTreeViewManager::GDALElevationLayer:
-		return "GDALElevationLayer";
-	case OsgTreeViewManager::FeatureImageLayer:
-		return "FeatureImageLayer";
-	case OsgTreeViewManager::OGRFeatureSource:
-		return "OGRFeatureSource";
-	case OsgTreeViewManager::FeatureModelLayer:
-		return "FeatureModelLayer";
-	case OsgTreeViewManager::AnnotationLayer:
-		return "AnnotationLayer";
-	case OsgTreeViewManager::UnknownLayer:
-		return "File";
+	switch (layerType) {
+	case OsgTreeViewManager::GDALImageLayer:	return "GDALImageLayer";
+	case OsgTreeViewManager::GDALElevationLayer:return "GDALElevationLayer";
+	case OsgTreeViewManager::FeatureImageLayer: return "FeatureImageLayer";
+	case OsgTreeViewManager::OGRFeatureSource:	return "OGRFeatureSource";
+	case OsgTreeViewManager::FeatureModelLayer: return "FeatureModelLayer";
+	case OsgTreeViewManager::AnnotationLayer:	return "AnnotationLayer";
+	case OsgTreeViewManager::UnknownLayer:		return "File";
 	}
 }
 
@@ -120,6 +109,7 @@ void OsgTreeViewManager::reloadTree() {
 		onLayerAdd(layer);
 		qDebug() << layer.get()->getTypeName();
 	}
+	setExpanded(rootNode->index(), true);
 }
 
 void OsgTreeViewManager::onItemChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight, const QVector<int>& roles) {
@@ -145,6 +135,19 @@ void OsgTreeViewManager::onItemChanged(const QModelIndex& topLeft, const QModelI
 				visibleLayer->setVisible(false);
 		}
 	}
+}
+
+void OsgTreeViewManager::removeNode(QStandardItem* node) {
+	auto layer = nodeToLayerMap[node];
+	if (layer == nullptr && node != rootNode) {
+		auto nodesToDelete = QList<QStandardItem*>();
+		for (int row = 0; row < node->rowCount();++row)
+			nodesToDelete.append(node->child(row));
+		for (auto nodeToDelete : nodesToDelete)
+			removeNode(nodeToDelete);
+	}
+	else 
+		g_osgEarthManager->removeLayer(layer);
 }
 
 void OsgTreeViewManager::onLayerAdd(osgEarth::Layer* layer) {
@@ -177,18 +180,20 @@ void OsgTreeViewManager::onLayerAdd(osgEarth::Layer* layer) {
 	layerNode->appendRow(item);
 }
 
-void OsgTreeViewManager::onLayerUpdate(osgEarth::Layer* layer) {
+void OsgTreeViewManager::onLayerRemove(osgEarth::Layer* layer) {
+	qDebug() << layer->getName();
 	auto layerType = getLayerType(layer->getTypeName());
-	auto rootNode = layerTypeToNodeMap[layerType];
+	auto layerRootNode = layerTypeToNodeMap[layerType];
 	auto layerNode = layerToNodeMap[layer];
-	
-	//TODO:: WTF is that i need to change it srx !!! (i dont have time !!!!)
-	for (int i = 0; i < rootNode->rowCount(); ++i) {
-		QStandardItem* child = rootNode->child(i);
-		if (child == layerNode) {
-			layerNode->removeRow(i);
-			break;
-		}
+
+	layerRootNode->removeRow(layerNode->row());
+	layerToNodeMap[layer] = nullptr;
+
+
+	if (layerRootNode->rowCount() == 0) {
+		rootNode->removeRow(layerRootNode->row());
+		layerTypeToNodeMap[layerType] = nullptr;
 	}
+
 
 }
