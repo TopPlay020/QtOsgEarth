@@ -20,5 +20,6 @@
         <file alias="AnnotationLayer">icons/AnnotationLayer.png</file>
         <file alias="layerName">icons/layerName.png</file>
         <file alias="layerRemove">icons/layerRemove.png</file>
+        <file alias="FeatureModelLayer">icons/FeatureModelLayer.png</file>
     </qresource>
 </RCC>
