@@ -88,7 +88,7 @@ void OsgEarthManager::saveEarthFile(const QString& fileName) {
 		std::size_t dotPosition = outputFileName.find_last_of('.');
 		if (dotPosition != std::string::npos)
 			outputFileName = outputFileName.substr(0, dotPosition);  // Remove current extension
-		
+
 		outputFileName += ".earth";
 
 		osgDB::Options* options = nullptr;
@@ -203,17 +203,15 @@ OsgLabel OsgEarthManager::addLabel(osg::Vec3d point, QString text)
 	auto layer = new osgEarth::AnnotationLayer();
 	layer->setName(text.toStdString());
 	layer->addChild(placeNode);
-	mapNode->getMap()->addLayer(layer);
+	addLayer(layer);
 
 	//qDebug() << layer->getOsgOptionString();
 
 	//qDebug() << placeNode->getConfig().toJSON(); // all Okey
 	//qDebug() << layer->getConfig().toJSON(); // There is No INFORMATION About PlaceNode
 
-	notifyLayerAdd(layer);
-
 	//return Node
-	return OsgLabel(placeNode , layer);
+	return OsgLabel(placeNode, layer);
 }
 
 OsgLine OsgEarthManager::addLine(osg::Vec3d pointStart, osg::Vec3d pointEnd) {
@@ -280,6 +278,15 @@ OsgPolygon OsgEarthManager::addPolygon(QList<osg::Vec3d>& points) {
 	mapNode->addChild(featureNode);
 
 	return OsgPolygon(featureNode);
+}
+
+void OsgEarthManager::addLayer(osgEarth::Layer* layer) {
+	mapNode->getMap()->addLayer(layer);
+	notifyLayerAdd(layer);
+}
+void OsgEarthManager::removeLayer(osgEarth::Layer* layer) {
+	notifyLayerRemove(layer);
+	mapNode->getMap()->removeLayer(layer);
 }
 
 void OsgEarthManager::removeNode(osg::Node* node) {

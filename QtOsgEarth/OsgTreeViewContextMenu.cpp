@@ -1,5 +1,7 @@
 #include <globals.h>
 #include <OsgTreeViewContextMenu.h>
+#include <QInputDialog>
+
 
 void OsgTreeViewContextMenu::createContextMenu() {
 	contextMenu = new QMenu(g_mainWindow);
@@ -15,7 +17,7 @@ void OsgTreeViewContextMenu::createContextMenu() {
 	contextMenu->addAction(removeLayerAction);
 
 	g_osgTreeViewManager->setContextMenuPolicy(Qt::CustomContextMenu);
-	QObject::connect(g_osgTreeViewManager,&QTreeView::customContextMenuRequested , this , &OsgTreeViewContextMenu::onContextMenu);
+	QObject::connect(g_osgTreeViewManager, &QTreeView::customContextMenuRequested, this, &OsgTreeViewContextMenu::onContextMenu);
 }
 
 
@@ -24,27 +26,42 @@ void OsgTreeViewContextMenu::onContextMenu(const QPoint& pos) {
 	if (!index.isValid()) return;
 
 	//I need to make model in OsgTreeViewManager provate and add method to use itemFromIndex !!
-	QStandardItem* item = g_osgTreeViewManager->model->itemFromIndex(index);
-	if (!item) return;
+	selectedItem = g_osgTreeViewManager->model->itemFromIndex(index);
+	if (!selectedItem) return;
 
-	// Change the item selected background
-	QBrush oldBrush = item->background();
+	// Change the selectedItem selected background
+	QBrush oldBrush = selectedItem->background();
 	QColor skyBlue(135, 206, 235);
 	QBrush newBrush(skyBlue);
-	item->setBackground(newBrush);
-	
+	selectedItem->setBackground(newBrush);
+
 
 	contextMenu->exec(g_osgTreeViewManager->mapToGlobal(pos));
 
-	// Restore the item selected background
-	item->setBackground(oldBrush);
-	
+	// Restore the selectedItem selected background
+	if(selectedItem)
+		selectedItem->setBackground(oldBrush);
+
 }
 
 void OsgTreeViewContextMenu::onChangeLayerNameAction() {
+	auto layer = g_osgTreeViewManager->getLayerFromQStandardItem(selectedItem);
+	bool ok; // to check if the user pressed OK
+	QString layerName = QInputDialog::getText(nullptr,
+		"Input new Layer Name",
+		"Please enter new Layer Name:",
+		QLineEdit::Normal,
+		QString(),
+		&ok);
+	if (ok && !layerName.isEmpty()) {
+		layer->setName(layerName.toStdString());
+		selectedItem->setText(layerName);
+	}
 
 }
 
 void OsgTreeViewContextMenu::onRemoveLayerAction() {
-
+	auto layer = g_osgTreeViewManager->getLayerFromQStandardItem(selectedItem);
+	g_osgEarthManager->removeLayer(layer);
+	selectedItem = nullptr;
 }

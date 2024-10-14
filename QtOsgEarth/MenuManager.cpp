@@ -53,18 +53,27 @@ void MenuManager::setupRecentFilesMenu() {
 	// Clear old entries
 	recentFilesMenu->clear();
 
+	QStringList validFiles;
+
 	for (const QString& file : recentFiles) {
-		QAction* action = recentFilesMenu->addAction(file);
-		action->setIcon(g_mediaManager->getIcon("File"));
-		QObject::connect(action, &QAction::triggered, g_mainWindow, [this, file]() {
-			g_osgEarthManager->loadEarthFile(file);
-			});
+		if (QFile::exists(file)) {  // Check if the file still exists
+			QAction* action = recentFilesMenu->addAction(file);
+			action->setIcon(g_mediaManager->getIcon("File"));
+			QObject::connect(action, &QAction::triggered, g_mainWindow, [this, file]() {
+				g_osgEarthManager->loadEarthFile(file);
+				});
+
+			validFiles.append(file);  // Keep valid files in the list
+		}
 	}
+
+	// Save the updated valid files list back to settings
+	settings.setValue("recentFiles", validFiles);
 }
 
 void MenuManager::setupStatusBar() {
 	// Create labels for latitude and longitude
-	activeFileNameLabel = new QLabel("Please Select File First", g_mainWindow);
+	activeFileNameLabel = new QLabel("   Please Select File First", g_mainWindow);
 	mouseLatitudeLabel = new QLabel("Latitude : 0.0", g_mainWindow);
 	mouseLongitudeLabel = new QLabel("Longitude: 0.0", g_mainWindow);
 	mouseAltitudeLabel = new QLabel("Altitude : 0.0", g_mainWindow);
@@ -102,7 +111,7 @@ void MenuManager::onFileLoadingEnd(const QString& fileName, bool success) {
 	saveAsAction->setEnabled(true);
 
 	//change label in status bar 
-	activeFileNameLabel->setText(QFileInfo(fileName).fileName());
+	activeFileNameLabel->setText("   "+QFileInfo(fileName).fileName());
 
 	refreshRecentFilesMenuWithNewFileName(fileName);
 
@@ -120,19 +129,30 @@ void MenuManager::refreshRecentFilesMenuWithNewFileName(QString fileName) {
 
 	// Check if the file is already in the list
 	QList<QAction*> actions = recentFilesMenu->actions();
+	QAction* existingAction = nullptr;
+
 	for (auto action : actions) {
-		if (action->text() == fileName)
-			return;  // File is already in the list
+		if (action->text() == fileName) {
+			existingAction = action;  // File found in the list
+			break;
+		}
 	}
 
-	// Create a new action for the file
-	QAction* action = recentFilesMenu->addAction(fileName);
-	action->setIcon(g_mediaManager->getIcon("File"));
+	if (existingAction) {
+		// Move the existing action to the top
+		recentFilesMenu->removeAction(existingAction);
+		recentFilesMenu->insertAction(actions.isEmpty() ? nullptr : actions.first(), existingAction);
+	}
+	else {
+		// Create a new action for the file
+		QAction* action = recentFilesMenu->addAction(fileName);
+		action->setIcon(g_mediaManager->getIcon("File"));
 
-	// Connect the action to load the file when triggered
-	QObject::connect(action, &QAction::triggered, g_mainWindow, [this, fileName]() {
-		g_osgEarthManager->loadEarthFile(fileName);
-		});
+		// Connect the action to load the file when triggered
+		QObject::connect(action, &QAction::triggered, g_mainWindow, [this, fileName]() {
+			g_osgEarthManager->loadEarthFile(fileName);
+			});
+	}
 
 	// Optionally limit the list size
 	const int maxRecentFiles = 10;
