@@ -21,5 +21,14 @@
         <file alias="layerName">icons/layerName.png</file>
         <file alias="layerRemove">icons/layerRemove.png</file>
         <file alias="FeatureModelLayer">icons/FeatureModelLayer.png</file>
+        <file alias="edit-file">icons/edit-file.png</file>
+        <file alias="open-file">icons/open-file.png</file>
+        <file alias="open-folder">icons/open-folder.png</file>
+        <file alias="recent-file">icons/recent-file.png</file>
+        <file alias="save-file">icons/save-file.png</file>
+        <file alias="add-location">icons/add-location.png</file>
+        <file alias="add-layer">icons/add-layer.png</file>
+        <file alias="add-distance">icons/add-distance.png</file>
+        <file alias="add-3d">icons/add-3d.png</file>
     </qresource>
 </RCC>

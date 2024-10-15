@@ -1,5 +1,5 @@
 #include "globals.h"
-#include "OsgEarthContextMenu.h";
+#include "OsgEarthContextMenu.h"
 #include "OsgTreeViewContextMenu.h"
 #include <QDesktopServices>
 #include <QTimer>
@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget* parent) :
 	mainContainer_layout->setStretch(1, 1);
 
 
-	
+
 
 	setCentralWidget(mainContainer);
 

@@ -22,20 +22,25 @@ public:
 	void updateUi() override;
 private:
 	void setupFileMenu();
+	void setupToolBar();
 	void setupRecentFilesMenu();
 	void setupStatusBar();
 
 	void refreshRecentFilesMenuWithNewFileName(QString fileName);
 
 
-	QMenu* fileMenu;
+	QToolBar* toolbar;
 	QMenu* recentFilesMenu;
-	QMenu* viewerContextMenu;
 
-	QAction* loadAction;
-	QAction* editAction;
-	QAction* revealFileExplorerAction;
-	QAction* saveAsAction;
+	QAction* a_openFile;
+	QAction* a_saveFile;
+	QAction* a_editFile;
+	QAction* a_revealInFileExplorer;
+
+	QAction* a_addLocation;
+	QAction* a_addDistance;
+	QAction* a_addLayer;
+	QAction* a_add3D;
 
 	QLabel* activeFileNameLabel;
 	QLabel* mouseLatitudeLabel;

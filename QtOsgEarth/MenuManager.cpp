@@ -2,9 +2,13 @@
 #include <QDesktopServices>
 #include <QSettings>
 #include <QStatusBar>
+#include <QToolBar>
+#include <QToolButton>
+
 
 void MenuManager::createMenu() {
-	setupFileMenu();
+	//setupFileMenu();
+	setupToolBar();
 	setupRecentFilesMenu();
 	setupStatusBar();
 	g_mainWindow->addUpdateAble(this);
@@ -13,7 +17,7 @@ void MenuManager::createMenu() {
 
 
 void MenuManager::setupFileMenu() {
-	fileMenu = g_mainWindow->menuBar()->addMenu("&File");
+	/*fileMenu = g_mainWindow->menuBar()->addMenu("&File");
 
 	loadAction = new QAction("&Open File...", g_mainWindow);
 	loadAction->setIcon(g_mediaManager->getIcon("File"));
@@ -41,8 +45,84 @@ void MenuManager::setupFileMenu() {
 	revealFileExplorerAction = fileMenu->addAction("&reveal in File Explorer");
 	revealFileExplorerAction->setIcon(g_mediaManager->getIcon("Folder"));
 	QObject::connect(revealFileExplorerAction, &QAction::triggered, this, &MenuManager::onRevealFileExplorerActionClick);
-	revealFileExplorerAction->setEnabled(false);
+	revealFileExplorerAction->setEnabled(false);*/
 }
+
+
+void MenuManager::setupToolBar() {
+	// Create the toolbar
+	toolbar = new QToolBar("Main Toolbar", g_mainWindow);
+	toolbar->setMovable(false);
+
+	// Set the style to display text under icons
+	toolbar->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+
+	// Set fixed width for the buttons
+	auto createFixedWidthButton = [](QAction* action) {
+		QToolButton* button = new QToolButton;
+		button->setDefaultAction(action);
+		button->setFixedWidth(60);
+		button->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+		return button;
+		};
+
+	// Create a menu for recent files
+	recentFilesMenu = new QMenu;
+
+	// Create a tool button for "Recents" with a popup menu
+	QToolButton* recentFilesButton = new QToolButton;
+	recentFilesButton->setIcon(g_mediaManager->getIcon("recent-file"));
+	recentFilesButton->setText("Recents");
+	recentFilesButton->setPopupMode(QToolButton::InstantPopup);  // Open menu on click
+	recentFilesButton->setMenu(recentFilesMenu);
+	recentFilesButton->setFixedWidth(60);
+	recentFilesButton->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+	recentFilesButton->setStyleSheet("QToolButton::menu-indicator {width: 0px;height: 0px;}");
+
+
+	a_openFile = new QAction(g_mediaManager->getIcon("open-file"), "Open File...", g_mainWindow);
+	a_saveFile = new QAction(g_mediaManager->getIcon("save-file"), "Save As", g_mainWindow);
+	a_editFile = new QAction(g_mediaManager->getIcon("edit-file"), "Edit File", g_mainWindow);
+	a_revealInFileExplorer = new QAction(g_mediaManager->getIcon("open-folder"), "Folder", g_mainWindow);
+
+	a_revealInFileExplorer->setEnabled(false);
+	a_editFile->setEnabled(false);
+	a_saveFile->setEnabled(false);
+
+	toolbar->addWidget(createFixedWidthButton(a_openFile));
+	toolbar->addWidget(recentFilesButton);
+	toolbar->addWidget(createFixedWidthButton(a_saveFile));
+	toolbar->addWidget(createFixedWidthButton(a_editFile));
+	toolbar->addWidget(createFixedWidthButton(a_revealInFileExplorer));
+
+	QObject::connect(a_openFile, &QAction::triggered, this, &MenuManager::onLoadActionClick);
+	QObject::connect(a_saveFile, &QAction::triggered, this, &MenuManager::onSaveAsClick);
+	QObject::connect(a_editFile, &QAction::triggered, this, &MenuManager::onEditActionClick);
+	QObject::connect(a_revealInFileExplorer, &QAction::triggered, this, &MenuManager::onRevealFileExplorerActionClick);
+
+
+	toolbar->addSeparator();
+
+	a_addLocation = new QAction(g_mediaManager->getIcon("add-location"), "Add Label", g_mainWindow);
+	a_addDistance = new QAction(g_mediaManager->getIcon("add-distance"), "Distance", g_mainWindow);
+	a_addLayer = new QAction(g_mediaManager->getIcon("add-layer"), "Add Layer", g_mainWindow);
+	a_add3D = new QAction(g_mediaManager->getIcon("add-3d"), "Add 3D", g_mainWindow);
+
+	a_addLocation->setEnabled(false);
+	a_addDistance->setEnabled(false);
+	a_addLayer->setEnabled(false);
+	a_add3D->setEnabled(false);
+
+	toolbar->addWidget(createFixedWidthButton(a_addLocation));
+	toolbar->addWidget(createFixedWidthButton(a_addDistance));
+	toolbar->addWidget(createFixedWidthButton(a_addLayer));
+	toolbar->addWidget(createFixedWidthButton(a_add3D));
+
+	// Add the toolbar to the main window
+	g_mainWindow->addToolBar(Qt::TopToolBarArea, toolbar);
+}
+
+
 
 void MenuManager::setupRecentFilesMenu() {
 	QSettings settings("EMP", "QtOsgEarth");
@@ -100,18 +180,18 @@ void MenuManager::updateMouseGeoPointCoordinates(double longitude, double latitu
 }
 
 void MenuManager::onFileLoadingStart(const QString& fileName) {
-	fileMenu->setEnabled(false);
+	toolbar->setEnabled(false);
 }
 
 void MenuManager::onFileLoadingEnd(const QString& fileName, bool success) {
 
-	fileMenu->setEnabled(true);
-	revealFileExplorerAction->setEnabled(true);
-	editAction->setEnabled(true);
-	saveAsAction->setEnabled(true);
+	toolbar->setEnabled(true);
+	a_revealInFileExplorer->setEnabled(true);
+	a_editFile->setEnabled(true);
+	a_saveFile->setEnabled(true);
 
 	//change label in status bar 
-	activeFileNameLabel->setText("   "+QFileInfo(fileName).fileName());
+	activeFileNameLabel->setText("   " + QFileInfo(fileName).fileName());
 
 	refreshRecentFilesMenuWithNewFileName(fileName);
 
@@ -130,13 +210,13 @@ void MenuManager::refreshRecentFilesMenuWithNewFileName(QString fileName) {
 	// Check if the file is already in the list
 	QList<QAction*> actions = recentFilesMenu->actions();
 	QAction* existingAction = nullptr;
-
-	for (auto action : actions) {
-		if (action->text() == fileName) {
-			existingAction = action;  // File found in the list
-			break;
+	if (!actions.isEmpty())
+		for (auto action : actions) {
+			if (action->text() == fileName) {
+				existingAction = action;  // File found in the list
+				break;
+			}
 		}
-	}
 
 	if (existingAction) {
 		// Move the existing action to the top
