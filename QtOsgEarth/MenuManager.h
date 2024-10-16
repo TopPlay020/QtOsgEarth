@@ -21,15 +21,15 @@ public:
 
 	void updateUi() override;
 private:
-	void setupFileMenu();
-	void setupToolBar();
+	void setupTopToolBar();
+	void setupLeftToolBar();
 	void setupRecentFilesMenu();
 	void setupStatusBar();
 
 	void refreshRecentFilesMenuWithNewFileName(QString fileName);
 
 
-	QToolBar* toolbar;
+	QToolBar* topToolbar;
 	QMenu* recentFilesMenu;
 
 	QAction* a_openFile;
@@ -42,9 +42,15 @@ private:
 	QAction* a_addLayer;
 	QAction* a_add3D;
 
+	QToolBar* leftToolbar;
+
+	QAction* a_layers;
+
 	QLabel* activeFileNameLabel;
 	QLabel* mouseLatitudeLabel;
 	QLabel* mouseLongitudeLabel;
+
+
 	QLabel* mouseAltitudeLabel;
 
 	QString oldFileName = nullptr;
@@ -56,4 +62,8 @@ private slots:
 	void onRevealFileExplorerActionClick();
 	void onCurrentFileChanged();
 	void onSaveAsClick();
+
+	void onAddLocation();
+
+	void onLayersClick();
 };

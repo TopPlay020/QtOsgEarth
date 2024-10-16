@@ -4,6 +4,7 @@
 #include <QDesktopServices>
 #include <QTimer>
 #include <QHBoxLayout>
+#include <QPropertyAnimation>
 
 
 MainWindow::MainWindow(QWidget* parent) :
@@ -25,36 +26,44 @@ MainWindow::MainWindow(QWidget* parent) :
 
 	installEventFilter(g_globalEventProvider);
 
-
-
-
-	auto sideBar = new QWidget();
-	auto sideBar_layout = new QHBoxLayout();
-	sideBar->setLayout(sideBar_layout);
-	sideBar_layout->addWidget(g_osgTreeViewManager);
-	sideBar_layout->addStretch();
-	sideBar_layout->setContentsMargins(0, 0, 0, 0);
-	//set sideBar fit explorer
-
-	auto mainContainer = new QWidget();
-	auto mainContainer_layout = new QHBoxLayout();
-	mainContainer->setLayout(mainContainer_layout);
-	mainContainer_layout->addWidget(sideBar);
-	mainContainer_layout->addWidget(g_osgEarthManager);
-	mainContainer_layout->setStretch(1, 1);
-
-
-
-
-	setCentralWidget(mainContainer);
-
-
+	setupUi();
 
 	//init Global Timer
 	updateTimer = new QTimer(this);
 	connect(updateTimer, &QTimer::timeout, this, &MainWindow::notifyListeners);
 	updateTimer->start(1000 / 60);
 
+	hideLeftSideBar();
+
+}
+
+void MainWindow::setupUi() {
+	leftSideBar = new QWidget();
+	auto leftSideBar_layout = new QHBoxLayout();
+	leftSideBar->setLayout(leftSideBar_layout);
+	leftSideBar_layout->addWidget(g_osgTreeViewManager);
+	leftSideBar_layout->addStretch();
+	leftSideBar_layout->setContentsMargins(0, 0, 0, 0);
+
+	auto mainContainer = new QWidget();
+	auto mainContainer_layout = new QHBoxLayout();
+	mainContainer->setLayout(mainContainer_layout);
+	mainContainer_layout->setSpacing(0);
+	mainContainer_layout->addWidget(leftSideBar);
+	mainContainer_layout->addWidget(g_osgEarthManager);
+	mainContainer_layout->setStretch(1, 1);
+	mainContainer_layout->setContentsMargins(0, 0, 0, 0);
+
+
+	setCentralWidget(mainContainer);
+}
+
+void MainWindow::showLeftSideBar() {
+	leftSideBar->show();
+}
+
+void MainWindow::hideLeftSideBar() {
+	leftSideBar->hide();
 }
 
 MainWindow::~MainWindow()

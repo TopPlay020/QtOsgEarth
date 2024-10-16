@@ -30,5 +30,6 @@
         <file alias="add-layer">icons/add-layer.png</file>
         <file alias="add-distance">icons/add-distance.png</file>
         <file alias="add-3d">icons/add-3d.png</file>
+        <file alias="layers">icons/layers.png</file>
     </qresource>
 </RCC>

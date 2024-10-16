@@ -103,6 +103,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AddLocationDialog.cpp" />
     <ClCompile Include="OsgEarthContextMenu.cpp" />
     <ClCompile Include="globals.cpp" />
     <ClCompile Include="main.cpp" />
@@ -110,6 +111,7 @@
     <ClCompile Include="MediaManager.cpp" />
     <ClCompile Include="MenuManager.cpp" />
     <ClCompile Include="OsgEarthManager.cpp" />
+    <ClCompile Include="OsgEarthTaskExecutor.cpp" />
     <ClCompile Include="OsgTreeViewContextMenu.cpp" />
     <ClCompile Include="OsgTreeViewManager.cpp" />
   </ItemGroup>
@@ -117,6 +119,7 @@
     <QtMoc Include="MainWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="AddLocationDialog.h" />
     <ClInclude Include="OsgEarthContextMenu.h" />
     <ClInclude Include="DistanceUtility.h" />
     <ClInclude Include="FileLoaderProvider.h" />
@@ -127,11 +130,11 @@
     <ClInclude Include="MediaManager.h" />
     <ClInclude Include="MenuManager.h" />
     <ClInclude Include="GlobalEventListener.h" />
+    <ClInclude Include="OsgEarthTaskExecutor.h" />
     <ClInclude Include="OsgEarthUtility.h" />
     <ClInclude Include="OsgTreeViewContextMenu.h" />
     <ClInclude Include="OsgTreeViewManager.h" />
     <ClInclude Include="UiUpdateAble.h" />
-    <ClInclude Include="ui_QtOsgEarth.h" />
     <QtMoc Include="GlobalEventProvider.h" />
     <ClInclude Include="OsgEarthManager.h" />
   </ItemGroup>

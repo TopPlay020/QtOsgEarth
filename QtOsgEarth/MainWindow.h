@@ -20,6 +20,12 @@ class MainWindow : public QMainWindow
 public:
 	explicit MainWindow(QWidget* parent = nullptr);
 	~MainWindow();
+
+	void setupUi();
+
+	void showLeftSideBar();
+	bool isLeftSideBarHidden() { return leftSideBar->isHidden(); };
+	void hideLeftSideBar();
 	
 	void addUpdateAble(UiUpdateAble* listener);
 	void removeUpdateAble(UiUpdateAble* listener);
@@ -30,4 +36,6 @@ private slots:
 private:
 	QTimer* updateTimer;                // Timer for periodic updates
 	QList<UiUpdateAble*> listeners;     // List of registered listeners
+
+	QWidget* leftSideBar;
 };

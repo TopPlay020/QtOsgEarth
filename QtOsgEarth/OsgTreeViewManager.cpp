@@ -52,7 +52,7 @@ void OsgTreeViewManager::setupView() {
 	// Apply styles
 	this->setStyleSheet(
 		"QTreeView {"
-		"    border: 1px solid #999;" // Border for the tree view
+		"    border: 0px;" // Border for the tree view
 		"    selection-background-color: #a4c8f0;" // Selection color
 		"    selection-color: #fff;" // Selection text color
 		"    outline: 0;"
