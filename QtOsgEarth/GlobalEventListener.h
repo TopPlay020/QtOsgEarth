@@ -3,8 +3,9 @@
 
 class GlobalEventListener {
 public:
-    virtual void onMouseMove() = 0;
-    virtual void onContextMenu() = 0;
-    virtual void onMouseLeftRelese() = 0;
+    virtual void onMouseMove(){};
+    virtual void onContextMenu(){};
+    virtual void onMouseLeftRelese(){};
+    virtual void onMouseClick() {};
 };
 

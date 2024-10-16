@@ -12,9 +12,56 @@ public:
 
 };
 
+class OsgLocationLabel {
+public:
+	OsgLocationLabel() {
+		layer = new osgEarth::AnnotationLayer();
+		node = new osgEarth::PlaceNode();
+		layer->addChild(node);
+	}
+	void sePosition(osgEarth::GeoPoint position) {
+		node->setPosition(position);
+	}
+	void setText(std::string text) {
+		if (text.empty())
+			text = "Empty";
+		node->setText(text);
+	}
+	void setName(std::string name) {
+		if (name.empty())
+			name = "Label";
+		node->setName(name);
+		layer->setName(name);
+	}
+	void setTextColor(QColor color) {
+		osgEarth::Style style = node->getStyle();
+		osgEarth::TextSymbol* textSymbol = style.getOrCreate<osgEarth::TextSymbol>();
+		osgEarth::Color osgColor(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+		textSymbol->fill()->color() = osgColor;
+		node->setStyle(style);
+	}
+	void setIcon(std::string url) {
+		osgEarth::Style style = node->getStyle();
+		osgEarth::IconSymbol* icon = style.getOrCreate<osgEarth::IconSymbol>();
+		icon->url()->setLiteral(url);
+		icon->declutter() = true; 
+		node->setStyle(style);
+	}
+	void update() {
+		node->dirty();
+	}
+
+	osgEarth::Layer* getLayer() {
+		return layer;
+	}
+private:
+	osgEarth::PlaceNode* node;
+	osgEarth::AnnotationLayer* layer;
+};
+
 class OsgLabel : public OsgNodeAdapter {
 public:
-	OsgLabel(osgEarth::PlaceNode* node , osgEarth::AnnotationLayer* layer) : node(node),layer(layer) {};
+	OsgLabel(osgEarth::PlaceNode* node, osgEarth::AnnotationLayer* layer) : node(node), layer(layer) {};
 	void setText(QString text) {
 		node->setText(text.toStdString());
 		layer->setName(text.toStdString());
@@ -26,7 +73,7 @@ private:
 	osgEarth::AnnotationLayer* layer;
 
 	void update() {
-		auto parent = node->getParent(0); 
+		auto parent = node->getParent(0);
 		auto geoPoint = node->getPosition();
 		auto style = node->getStyle();
 		auto text = node->getText();

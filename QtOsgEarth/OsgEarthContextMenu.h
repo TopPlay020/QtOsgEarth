@@ -12,7 +12,6 @@ public:
 	void createContextMenu();
 
 	void onContextMenu() override;
-	void onMouseMove() override {};
 	void onMouseLeftRelese() override;
 
 	void updateUi() override;

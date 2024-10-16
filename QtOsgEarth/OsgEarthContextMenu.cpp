@@ -57,7 +57,7 @@ void OsgEarthContextMenu::onContextMenu() {
 	int mouseX = localMousePos.x();
 	int mouseY = localMousePos.y();
 
-	contextMenuPoint = g_osgEarthManager->getMouseCoordinatesInGeoPoint(mouseX, mouseY);
+	contextMenuPoint = g_osgEarthManager->getMouseCoordinates(mouseX, mouseY);
 	if (contextMenuPoint.x() == 200)
 		return;
 	copyPositionAction->setText(QString("%1, %2, %3").arg(contextMenuPoint.x()).arg(contextMenuPoint.y()).arg(contextMenuPoint.z()));
@@ -101,7 +101,7 @@ void OsgEarthContextMenu::onDistanceAction() {
 		QPoint localMousePos = g_osgEarthManager->mapFromGlobal(globalMousePos);
 		int mouseX = localMousePos.x();
 		int mouseY = localMousePos.y();
-		auto currentPoint = g_osgEarthManager->getMouseCoordinatesInGeoPoint(mouseX, mouseY);
+		auto currentPoint = g_osgEarthManager->getMouseCoordinates(mouseX, mouseY);
 
 		distanceCommandUnit = g_osgEarthManager->addLine(firstPointDistance, currentPoint);
 	}
@@ -150,7 +150,7 @@ void OsgEarthContextMenu::updateUi() {
 			QPoint localMousePos = g_osgEarthManager->mapFromGlobal(globalMousePos);
 			int mouseX = localMousePos.x();
 			int mouseY = localMousePos.y();
-			lastPointDistance = g_osgEarthManager->getMouseCoordinatesInGeoPoint(mouseX, mouseY);
+			lastPointDistance = g_osgEarthManager->getMouseCoordinates(mouseX, mouseY);
 
 			distanceCommandUnit.setEndPoint(lastPointDistance);
 		}

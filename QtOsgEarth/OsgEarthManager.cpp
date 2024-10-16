@@ -97,9 +97,9 @@ void OsgEarthManager::saveEarthFile(const QString& fileName) {
 }
 
 //By Me
-osg::Vec3d OsgEarthManager::getMouseCoordinatesInGeoPoint(int mouseX, int mouseY) {
+osgEarth::GeoPoint OsgEarthManager::getMouseCoordinatesInGeoPoint(int mouseX, int mouseY) {
 	if (!viewer || !mapNode) {
-		return osg::Vec3d(200, 200, 200); // Assuming you want to keep the third dimension as 0
+		return nullptr; // Assuming you want to keep the third dimension as 0
 	}
 
 	// Get the viewport and camera
@@ -127,16 +127,20 @@ osg::Vec3d OsgEarthManager::getMouseCoordinatesInGeoPoint(int mouseX, int mouseY
 		osg::Vec3d worldPos = intersection.getWorldIntersectPoint();
 		osgEarth::GeoPoint geoPoint;
 		geoPoint.fromWorld(mapNode->getMapSRS(), worldPos);
-
-		// Extract latitude and longitude and set the Z coordinate to 0 or another desired value
-		double longitude = geoPoint.x(); // Longitude in 
-		double latitude = geoPoint.y();  // Latitude in degrees
-		double altitude = geoPoint.z(); // altitude in degrees
-
-		return osg::Vec3d(longitude, latitude, altitude); // Z coordinate can be modified as needed
+		return geoPoint;
 	}
 
-	return osg::Vec3d(200, 200, 200); // Assuming you want to keep the third dimension as 0
+	return nullptr;
+}
+
+osg::Vec3d OsgEarthManager::getMouseCoordinates(int mouseX, int mouseY) {
+	auto geoPoint = getMouseCoordinatesInGeoPoint(mouseX, mouseY);
+	if(geoPoint == nullptr)
+		return osg::Vec3d(200, 200, 200);
+	double longitude = geoPoint.x(); 
+	double latitude = geoPoint.y();  
+	double altitude = geoPoint.z(); 
+	return osg::Vec3d(longitude, latitude, altitude);
 }
 
 double OsgEarthManager::getAltitude(double latitude, double longitude)
@@ -205,12 +209,6 @@ OsgLabel OsgEarthManager::addLabel(osg::Vec3d point, QString text)
 	layer->addChild(placeNode);
 	addLayer(layer);
 
-	//qDebug() << layer->getOsgOptionString();
-
-	//qDebug() << placeNode->getConfig().toJSON(); // all Okey
-	//qDebug() << layer->getConfig().toJSON(); // There is No INFORMATION About PlaceNode
-
-	//return Node
 	return OsgLabel(placeNode, layer);
 }
 

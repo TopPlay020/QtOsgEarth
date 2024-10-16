@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget* parent) :
 	g_menuManager = new MenuManager();
 	g_osgEarthManager = new OsgEarthManager();
 	g_osgTreeViewManager = new OsgTreeViewManager();
+	g_osgEarthTaskExecutor = new OsgEarthTaskExecutor();
 
 	g_menuManager->createMenu();
 	g_osgEarthManager->setupOsgEarth();

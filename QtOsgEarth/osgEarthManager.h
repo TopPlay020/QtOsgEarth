@@ -14,7 +14,8 @@ public:
 	void saveEarthFile(const QString& fileName);
 	void reloadEarthFile();
 
-	osg::Vec3d getMouseCoordinatesInGeoPoint(int mouseX, int mouseY);
+	osgEarth::GeoPoint getMouseCoordinatesInGeoPoint(int mouseX, int mouseY);
+	osg::Vec3d getMouseCoordinates(int mouseX, int mouseY);
 	double getAltitude(double latitude, double longitude);
 	void adjustAltitudes(QList<osg::Vec3d>& points);
 

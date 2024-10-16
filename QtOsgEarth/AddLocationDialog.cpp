@@ -9,12 +9,50 @@ AddLocationDialog::AddLocationDialog(QWidget* parent) : QDialog(parent) {
 	QVBoxLayout* mainLayout = new QVBoxLayout(this);
 	QHBoxLayout* TopLayout = new QHBoxLayout(this);
 
+	QVBoxLayout* iconVLayout = new QVBoxLayout();
+	TopLayout->addLayout(iconVLayout);
 	// Image display label
 	imageLabel = new QLabel(this);
 	setDefaultImage(); // Set the default image
-	imageLabel->setAlignment(Qt::AlignCenter); // Center the label
+	imageLabel->setAlignment(Qt::AlignHCenter); // Center the label
 	imageLabel->setFixedSize(120, 120);
-	TopLayout->addWidget(imageLabel, 0, Qt::AlignCenter); // Center the label in the main layout
+	iconVLayout->addWidget(imageLabel); // Center the label in the main layout
+
+	QVBoxLayout* sliderLayout = new QVBoxLayout();
+
+	slider = new QSlider(Qt::Horizontal, this);
+	slider->setRange(32, 120);
+	slider->setValue(32);  // Default value
+	slider->setStyleSheet(
+		"QSlider::groove:horizontal {"
+		"height: 8px;"
+		"background: #ddd;"
+		"border-radius: 4px;"
+		"}"
+		"QSlider::handle:horizontal {"
+		"background-color: #55b5ff;"
+		"border: none;"
+		"width: 18px;"
+		"margin: -5px 0;"  // Align the handle with the groove
+		"border-radius: 9px;"
+		"}"
+		"QSlider::handle:horizontal:hover {"
+		"background-color: #4cae4f;"  // Hover color
+		"}"
+	);
+
+	// Add the slider below imageLabel in TopLayout
+	sliderLayout->addWidget(slider, 0, Qt::AlignCenter);
+
+	sliderValueLabel = new QLabel(QString::number(slider->value()), this);
+	sliderValueLabel->setAlignment(Qt::AlignCenter);
+	sliderValueLabel->setStyleSheet("font-size: 14px; padding: 2px;");
+
+	connect(slider, &QSlider::valueChanged, this, [this](int value) {setIconSize(value);});
+	
+	sliderLayout->addWidget(sliderValueLabel, 0, Qt::AlignCenter);
+
+	iconVLayout->addLayout(sliderLayout, Qt::AlignBottom);
 
 	// Create a horizontal layout for name and text edits
 	QVBoxLayout* vLayout = new QVBoxLayout();
@@ -76,7 +114,7 @@ AddLocationDialog::AddLocationDialog(QWidget* parent) : QDialog(parent) {
 	TopLayout->addLayout(vLayout);
 
 	QHBoxLayout* BottomLayout = new QHBoxLayout();
-	btn_addLabel = new QPushButton("Add Label" , this);
+	btn_addLabel = new QPushButton("Add Label", this);
 	btn_addLabel->setCursor(Qt::PointingHandCursor);
 	connect(btn_addLabel, &QPushButton::clicked, this, &AddLocationDialog::accept);
 	btn_addLabel->setStyleSheet("QPushButton {"
@@ -101,6 +139,11 @@ AddLocationDialog::AddLocationDialog(QWidget* parent) : QDialog(parent) {
 
 void AddLocationDialog::setDefaultImage() {
 	imageLabel->setPixmap(g_mediaManager->getIcon("PlaceHolder").pixmap(120, 120));
+	iconUrl = g_mediaManager->getIconPath(g_mediaManager->getIcon("PlaceHolder")).c_str();
+}
+
+void AddLocationDialog::setIconSize(int size) {
+	sliderValueLabel->setText(QString::number(size));
 }
 
 void AddLocationDialog::selectColor() {
@@ -123,13 +166,31 @@ void AddLocationDialog::selectColor() {
 void AddLocationDialog::selectIcon() {
 	QString fileName = QFileDialog::getOpenFileName(this, "Select Icon", "", "Images (*.png *.xpm *.jpg)");
 	if (!fileName.isEmpty()) {
+		iconUrl = fileName;
 		QPixmap pixmap(fileName);
 		imageLabel->setPixmap(pixmap.scaled(64, 64, Qt::KeepAspectRatio)); // Adjust the size as needed
 	}
 }
 
-void AddLocationDialog::execDialog() {
+int AddLocationDialog::execDialog() {
 	setFixedSize(400, 200);
 	textEdit->setFocus(); // Set focus on textEdit before exec
-	exec(); // Execute the dialog
+	return exec(); // Execute the dialog
+}
+
+QString AddLocationDialog::getName() {
+	return nameEdit->text();
+}
+
+QString AddLocationDialog::getText() {
+	return textEdit->text();
+}
+
+QString AddLocationDialog::getIconUrl() {
+	qDebug() << iconUrl;
+	return iconUrl;
+}
+
+QColor AddLocationDialog::getTextColor() {
+	return btn_color->palette().button().color();
 }

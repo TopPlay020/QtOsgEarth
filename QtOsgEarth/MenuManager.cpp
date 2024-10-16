@@ -265,8 +265,7 @@ void MenuManager::onSaveAsClick() {
 }
 
 void MenuManager::onAddLocation() {
-	AddLocationDialog* dialog = new AddLocationDialog(g_mainWindow);
-	dialog->execDialog();
+	g_osgEarthTaskExecutor->addLabelTask();
 
 }
 
@@ -300,7 +299,7 @@ void MenuManager::updateUi() {
 	int mouseY = localMousePos.y();
 
 	//auto geoPoint = g_osgEarthManager->getPixelPosition(mouseX, mouseY);
-	auto geoPoint = g_osgEarthManager->getMouseCoordinatesInGeoPoint(mouseX, mouseY);
+	auto geoPoint = g_osgEarthManager->getMouseCoordinates(mouseX, mouseY);
 
 	updateMouseGeoPointCoordinates(geoPoint.x(), geoPoint.y(), geoPoint.z());
 

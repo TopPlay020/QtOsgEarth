@@ -25,21 +25,29 @@ public:
 
 private:
 	bool earthZoomingEvent = false;
+	bool earthMovingEvent = false;
 	bool rightMousePressed = false;
+	bool leftMousePressed = false;
 protected:
 	// Event filter to capture mouse events
 	bool eventFilter(QObject* obj, QEvent* event) override {
-		//if (event->type() != QEvent::Paint && event->type() != QEvent::UpdateRequest)
-		//	qDebug() << event->type();
+		if (event->type() != QEvent::Paint && event->type() != QEvent::UpdateRequest)
+			qDebug() << event->type();
 
 		switch (event->type()) {
 		case QEvent::MouseMove: {
 			if (rightMousePressed)
 				earthZoomingEvent = true;
+			if (leftMousePressed)
+				earthMovingEvent = true;
 			break;
 		}
 		case QEvent::HoverMove: {
 			notifyMouseMove();
+			if (rightMousePressed)
+				earthZoomingEvent = true;
+			if (leftMousePressed)
+				earthMovingEvent = true;
 			break;
 		}
 		case QEvent::MouseButtonPress: {
@@ -47,6 +55,10 @@ protected:
 			if (mouseEvent->button() == Qt::RightButton) {
 				rightMousePressed = true;
 				earthZoomingEvent = false;
+			}
+			else if (mouseEvent->button() == Qt::LeftButton) {
+				leftMousePressed = true;
+				earthMovingEvent = false;
 			}
 			break;
 		}
@@ -57,6 +69,9 @@ protected:
 			}
 			else if (mouseEvent->button() == Qt::LeftButton) {
 				notifyMouseLeftRelese();
+				if (!earthMovingEvent)
+					notifyMouseClick();
+				leftMousePressed = false;
 			}
 			break;
 		}
@@ -90,6 +105,12 @@ private:
 	void notifyMouseLeftRelese() {
 		for (auto listener : listeners) {
 			listener->onMouseLeftRelese();
+		}
+	}
+
+	void notifyMouseClick() {
+		for (auto listener : listeners) {
+			listener->onMouseClick();
 		}
 	}
 };
