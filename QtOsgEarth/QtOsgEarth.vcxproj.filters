@@ -68,6 +68,9 @@
     <ClCompile Include="OsgTreeViewContextMenu.cpp">
       <Filter>Source Files\ContextMenu</Filter>
     </ClCompile>
+    <ClCompile Include="AddLocationDialog.cpp">
+      <Filter>Form Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GlobalEventProvider.h">
@@ -75,6 +78,9 @@
     </QtMoc>
     <QtMoc Include="MainWindow.h">
       <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AddLocationDialog.h">
+      <Filter>Form Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -101,9 +107,6 @@
     </ClInclude>
     <ClInclude Include="DistanceUtility.h">
       <Filter>Header Files\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_QtOsgEarth.h">
-      <Filter>Form Files</Filter>
     </ClInclude>
     <ClInclude Include="OsgTreeViewManager.h">
       <Filter>Header Files\Manager</Filter>

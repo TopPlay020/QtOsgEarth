@@ -6,7 +6,9 @@
 int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
-	QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+	QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+	QApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
 
 
 	QSurfaceFormat format = QSurfaceFormat::defaultFormat();

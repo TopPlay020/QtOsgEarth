@@ -103,6 +103,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AddLocationDialog.cpp" />
     <ClCompile Include="OsgEarthContextMenu.cpp" />
     <ClCompile Include="globals.cpp" />
     <ClCompile Include="main.cpp" />
@@ -117,6 +118,7 @@
     <QtMoc Include="MainWindow.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="AddLocationDialog.h" />
     <ClInclude Include="OsgEarthContextMenu.h" />
     <ClInclude Include="DistanceUtility.h" />
     <ClInclude Include="FileLoaderProvider.h" />
@@ -131,7 +133,6 @@
     <ClInclude Include="OsgTreeViewContextMenu.h" />
     <ClInclude Include="OsgTreeViewManager.h" />
     <ClInclude Include="UiUpdateAble.h" />
-    <ClInclude Include="ui_QtOsgEarth.h" />
     <QtMoc Include="GlobalEventProvider.h" />
     <ClInclude Include="OsgEarthManager.h" />
   </ItemGroup>
