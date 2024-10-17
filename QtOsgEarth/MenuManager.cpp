@@ -87,6 +87,7 @@ void MenuManager::setupTopToolBar() {
 	topToolbar->addWidget(createFixedWidthButton(a_add3D));
 
 	connect(a_addLocation, &QAction::triggered, this, &MenuManager::onAddLocation);
+	connect(a_addLayer, &QAction::triggered, this, &MenuManager::onAddLayer);
 
 	// Add the toolbar to the main window
 	g_mainWindow->addToolBar(Qt::TopToolBarArea, topToolbar);
@@ -187,6 +188,7 @@ void MenuManager::onFileLoadingEnd(const QString& fileName, bool success) {
 	a_saveFile->setEnabled(true);
 
 	a_addLocation->setEnabled(true);
+	a_addLayer->setEnabled(true);
 
 	a_layers->setEnabled(true);
 	g_mainWindow->showLeftSideBar();
@@ -267,6 +269,11 @@ void MenuManager::onSaveAsClick() {
 void MenuManager::onAddLocation() {
 	g_osgEarthTaskExecutor->addLabelTask();
 
+}
+
+void MenuManager::onAddLayer()
+{
+	g_osgEarthTaskExecutor->addLayerTask();
 }
 
 void MenuManager::onLayersClick() {

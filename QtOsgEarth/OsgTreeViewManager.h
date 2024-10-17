@@ -20,6 +20,10 @@ public:
 	void onLayerUpdate(osgEarth::Layer* layer) override {};
 	void onLayerRemove(osgEarth::Layer* layer) override;
 
+	void dragMoveEvent(QDragMoveEvent* event) override;
+	void dragEnterEvent(QDragEnterEvent* event) override;
+	void dropEvent(QDropEvent* event) override;
+
 	void reloadTree();
 
 	enum LayerType {

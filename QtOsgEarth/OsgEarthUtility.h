@@ -40,11 +40,12 @@ public:
 		textSymbol->fill()->color() = osgColor;
 		node->setStyle(style);
 	}
-	void setIcon(std::string url) {
+	void setIcon(std::string url , float iconSize) {
 		osgEarth::Style style = node->getStyle();
 		osgEarth::IconSymbol* icon = style.getOrCreate<osgEarth::IconSymbol>();
 		icon->url()->setLiteral(url);
 		icon->declutter() = true; 
+		icon->scale() = iconSize;
 		node->setStyle(style);
 	}
 	void update() {

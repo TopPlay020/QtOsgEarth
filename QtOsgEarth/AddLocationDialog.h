@@ -22,6 +22,7 @@ public:
     QString getName();
     QString getText();
     QString getIconUrl();
+    float getIconSize();
     QColor getTextColor();
 
 private slots:

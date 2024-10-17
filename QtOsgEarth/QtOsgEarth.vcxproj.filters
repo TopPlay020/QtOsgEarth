@@ -74,6 +74,9 @@
     <ClCompile Include="OsgEarthTaskExecutor.cpp">
       <Filter>Source Files\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="AddLayerDialog.cpp">
+      <Filter>Form Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GlobalEventProvider.h">
@@ -83,6 +86,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="AddLocationDialog.h">
+      <Filter>Form Files</Filter>
+    </QtMoc>
+    <QtMoc Include="AddLayerDialog.h">
       <Filter>Form Files</Filter>
     </QtMoc>
   </ItemGroup>

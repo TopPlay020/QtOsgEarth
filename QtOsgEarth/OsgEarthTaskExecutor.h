@@ -4,6 +4,7 @@ class OsgEarthTaskExecutor : public UiUpdateAble , public GlobalEventListener
 public:
     OsgEarthTaskExecutor();
     void addLabelTask();
+    void addLayerTask();
 
     void onMouseClick() override;
 

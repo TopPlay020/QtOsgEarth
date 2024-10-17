@@ -1,5 +1,7 @@
 #include<globals.h>
+#include <osgEarth\GDAL>
 #include <AddLocationDialog.h>
+#include <AddLayerDialog.h>
 
 OsgEarthTaskExecutor::OsgEarthTaskExecutor() {
 	g_mainWindow->addUpdateAble(this);
@@ -14,14 +16,44 @@ void OsgEarthTaskExecutor::addLabelTask() {
 		return;
 
 	isAddLabelTaskRunning = true;
-	
+
 	locationLabel = new OsgLocationLabel();
 	locationLabel->setName(dialog->getName().toStdString());
 	locationLabel->setText(dialog->getText().toStdString());
 	locationLabel->setTextColor(dialog->getTextColor());
-	locationLabel->setIcon(dialog->getIconUrl().toStdString());
+	locationLabel->setIcon(dialog->getIconUrl().toStdString(), dialog->getIconSize());
 
 	g_osgEarthManager->addLayer(locationLabel->getLayer());
+}
+
+void OsgEarthTaskExecutor::addLayerTask()
+{
+	AddLayerDialog* addLayerDialog = new AddLayerDialog(g_mainWindow);
+	auto result = addLayerDialog->execDialog();
+
+	if (result == QDialog::Rejected || addLayerDialog->getDataFile().isEmpty())
+		return;
+
+	switch (addLayerDialog->getLayerType()) {
+	case OsgTreeViewManager::GDALImageLayer: {
+		auto gdalImageLayer = new osgEarth::GDALImageLayer();
+		gdalImageLayer->setName(addLayerDialog->getLayerName().toStdString());
+		gdalImageLayer->setURL(osgEarth::URI(addLayerDialog->getDataFile().toStdString()));
+		g_osgEarthManager->addLayer(gdalImageLayer);
+		break;
+	}
+	case OsgTreeViewManager::GDALElevationLayer: {
+		auto gdalElevationLayer = new osgEarth::GDALElevationLayer();
+		gdalElevationLayer->setName(addLayerDialog->getLayerName().toStdString());
+		gdalElevationLayer->setURL(osgEarth::URI(addLayerDialog->getDataFile().toStdString()));
+		g_osgEarthManager->addLayer(gdalElevationLayer);
+		break;
+	}
+	default:
+		// Optional: Handle unexpected layer types.
+		break;
+	}
+
 }
 
 void OsgEarthTaskExecutor::onMouseClick() {
@@ -42,5 +74,5 @@ void OsgEarthTaskExecutor::updateUi() {
 		locationLabel->sePosition(currentMapGeoPoint);
 		locationLabel->update();
 	}
-		
+
 }

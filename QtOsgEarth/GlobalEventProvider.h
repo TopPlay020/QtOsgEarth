@@ -31,8 +31,8 @@ private:
 protected:
 	// Event filter to capture mouse events
 	bool eventFilter(QObject* obj, QEvent* event) override {
-		if (event->type() != QEvent::Paint && event->type() != QEvent::UpdateRequest)
-			qDebug() << event->type();
+		/*if (event->type() != QEvent::Paint && event->type() != QEvent::UpdateRequest)
+			qDebug() << event->type();*/
 
 		switch (event->type()) {
 		case QEvent::MouseMove: {

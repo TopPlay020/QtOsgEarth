@@ -21,6 +21,10 @@ void OsgTreeViewManager::createTreeView() {
 
 void OsgTreeViewManager::setupView() {
 	this->setHeaderHidden(true);
+	this->setDragEnabled(true);
+	this->setAcceptDrops(true);
+	this->setDropIndicatorShown(true);
+	this->setDefaultDropAction(Qt::MoveAction);
 
 	// Create a standard item model
 	model = new QStandardItemModel;
@@ -159,7 +163,7 @@ void OsgTreeViewManager::onLayerAdd(osgEarth::Layer* layer) {
 
 	if (visibleLayer)
 	{
-		item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
+		item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled);
 		item->setData(Qt::Checked, Qt::CheckStateRole);
 
 	}
@@ -183,6 +187,22 @@ void OsgTreeViewManager::onLayerRemove(osgEarth::Layer* layer) {
 		rootNode->removeRow(layerRootNode->row());
 		layerTypeToNodeMap[layerType] = nullptr;
 	}
+}
 
+void OsgTreeViewManager::dragMoveEvent(QDragMoveEvent* event) {
+	QModelIndex index = indexAt(event->pos());
+	if (index.isValid()) {
+		qDebug() << "Dragging over row" << index.row() << "column" << index.column();
+	}
+	QTreeView::dragMoveEvent(event);
+}
 
+void OsgTreeViewManager::dragEnterEvent(QDragEnterEvent* event) {
+	qDebug() << "Dragging started";
+	QTreeView::dragEnterEvent(event);
+}
+
+void OsgTreeViewManager::dropEvent(QDropEvent* event) {
+	qDebug() << "Dropping at position" << event->pos();
+	QTreeView::dropEvent(event);
 }

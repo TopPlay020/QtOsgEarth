@@ -64,6 +64,7 @@ private slots:
 	void onSaveAsClick();
 
 	void onAddLocation();
+	void onAddLayer();
 
 	void onLayersClick();
 };

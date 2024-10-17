@@ -13,16 +13,15 @@ AddLocationDialog::AddLocationDialog(QWidget* parent) : QDialog(parent) {
 	TopLayout->addLayout(iconVLayout);
 	// Image display label
 	imageLabel = new QLabel(this);
-	setDefaultImage(); // Set the default image
-	imageLabel->setAlignment(Qt::AlignHCenter); // Center the label
+	imageLabel->setAlignment(Qt::AlignCenter); // Center the label
 	imageLabel->setFixedSize(120, 120);
 	iconVLayout->addWidget(imageLabel); // Center the label in the main layout
 
 	QVBoxLayout* sliderLayout = new QVBoxLayout();
-
+	sliderLayout->setContentsMargins(0, 10, 0, 0);
 	slider = new QSlider(Qt::Horizontal, this);
-	slider->setRange(32, 120);
-	slider->setValue(32);  // Default value
+	slider->setRange(32, 64);
+	slider->setValue(48);  // Default value
 	slider->setStyleSheet(
 		"QSlider::groove:horizontal {"
 		"height: 8px;"
@@ -49,7 +48,7 @@ AddLocationDialog::AddLocationDialog(QWidget* parent) : QDialog(parent) {
 	sliderValueLabel->setStyleSheet("font-size: 14px; padding: 2px;");
 
 	connect(slider, &QSlider::valueChanged, this, [this](int value) {setIconSize(value);});
-	
+
 	sliderLayout->addWidget(sliderValueLabel, 0, Qt::AlignCenter);
 
 	iconVLayout->addLayout(sliderLayout, Qt::AlignBottom);
@@ -135,15 +134,19 @@ AddLocationDialog::AddLocationDialog(QWidget* parent) : QDialog(parent) {
 	mainLayout->addLayout(BottomLayout);
 
 	setLayout(mainLayout);
+	setDefaultImage();
 }
 
 void AddLocationDialog::setDefaultImage() {
-	imageLabel->setPixmap(g_mediaManager->getIcon("PlaceHolder").pixmap(120, 120));
+	auto size = slider->value();
+	imageLabel->setPixmap(g_mediaManager->getIcon("PlaceHolder").pixmap(size, size));
 	iconUrl = g_mediaManager->getIconPath(g_mediaManager->getIcon("PlaceHolder")).c_str();
 }
 
 void AddLocationDialog::setIconSize(int size) {
 	sliderValueLabel->setText(QString::number(size));
+	QPixmap pixmap(iconUrl);
+	imageLabel->setPixmap(pixmap.scaled(size, size, Qt::KeepAspectRatio));
 }
 
 void AddLocationDialog::selectColor() {
@@ -187,8 +190,11 @@ QString AddLocationDialog::getText() {
 }
 
 QString AddLocationDialog::getIconUrl() {
-	qDebug() << iconUrl;
 	return iconUrl;
+}
+
+float AddLocationDialog::getIconSize() {
+	return (float)slider->value() / (float)slider->maximum();
 }
 
 QColor AddLocationDialog::getTextColor() {

@@ -103,6 +103,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AddLayerDialog.cpp" />
     <ClCompile Include="AddLocationDialog.cpp" />
     <ClCompile Include="OsgEarthContextMenu.cpp" />
     <ClCompile Include="globals.cpp" />
@@ -120,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="AddLocationDialog.h" />
+    <QtMoc Include="AddLayerDialog.h" />
     <ClInclude Include="OsgEarthContextMenu.h" />
     <ClInclude Include="DistanceUtility.h" />
     <ClInclude Include="FileLoaderProvider.h" />
