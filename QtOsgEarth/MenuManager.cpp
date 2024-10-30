@@ -244,7 +244,7 @@ void MenuManager::refreshRecentFilesMenuWithNewFileName(QString fileName) {
 }
 
 void MenuManager::onLoadActionClick() {
-	QString fileName = QFileDialog::getOpenFileName(g_mainWindow, "Open Earth File", "", "*.earth");
+	QString fileName = QFileDialog::getOpenFileName(g_mainWindow, "Open Earth File", "", "Earth Files (*.osgBegh , *.earth , *.db)");
 	if (!fileName.isEmpty())
 		g_osgEarthManager->loadEarthFile(fileName);
 
@@ -260,9 +260,12 @@ void MenuManager::onRevealFileExplorerActionClick() {
 }
 
 void MenuManager::onSaveAsClick() {
-	QString fileName = QFileDialog::getSaveFileName(g_mainWindow, "Save Earth File", "", "*.earth");
+	QString fileName = QFileDialog::getSaveFileName(g_mainWindow, "Save Earth File", "", "Earth Files (*.osgBegh , *.earth , *.db)");
 	if (!fileName.isEmpty()) {
-		g_osgEarthManager->saveEarthFile(fileName);
+		if (fileName.endsWith(".earth"))
+			g_osgEarthManager->saveEarthFile(fileName);
+		else if (fileName.endsWith(".osgBegh"))
+			g_osgSqlLiteManager->saveSqlFile(fileName.toStdString());
 	}
 }
 

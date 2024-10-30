@@ -7,3 +7,4 @@ GlobalEventProvider* g_globalEventProvider = new GlobalEventProvider();
 MediaManager* g_mediaManager = new MediaManager();
 OsgTreeViewManager* g_osgTreeViewManager = nullptr;
 OsgEarthTaskExecutor* g_osgEarthTaskExecutor = nullptr;
+OsgSqlLiteManager* g_osgSqlLiteManager = new OsgSqlLiteManager();

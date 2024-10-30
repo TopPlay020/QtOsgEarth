@@ -71,8 +71,12 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(lib_vc);</AdditionalLibraryDirectories>
-      <AdditionalDependencies>osg.lib;osgGA.lib;osgDB.lib;osgText.lib;osgViewer.lib;osgEarth.lib;osgQOpenGL.lib;osgUtil.lib;%(AdditionalDependencies);$(Qt_LIBS_)</AdditionalDependencies>
+      <AdditionalDependencies>osg.lib;osgGA.lib;sqlite3.lib;osgDB.lib;osgText.lib;osgViewer.lib;osgEarth.lib;osgQOpenGL.lib;osgUtil.lib;%(AdditionalDependencies);$(Qt_LIBS_)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
@@ -115,6 +119,7 @@
     <ClCompile Include="OsgEarthTaskExecutor.cpp" />
     <ClCompile Include="OsgTreeViewContextMenu.cpp" />
     <ClCompile Include="OsgTreeViewManager.cpp" />
+    <ClCompile Include="SqlLiteManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="MainWindow.h" />
@@ -136,6 +141,7 @@
     <ClInclude Include="OsgEarthUtility.h" />
     <ClInclude Include="OsgTreeViewContextMenu.h" />
     <ClInclude Include="OsgTreeViewManager.h" />
+    <ClInclude Include="OsgSqlLiteManager.h" />
     <ClInclude Include="UiUpdateAble.h" />
     <QtMoc Include="GlobalEventProvider.h" />
     <ClInclude Include="OsgEarthManager.h" />

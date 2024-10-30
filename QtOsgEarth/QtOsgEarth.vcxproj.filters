@@ -77,6 +77,9 @@
     <ClCompile Include="AddLayerDialog.cpp">
       <Filter>Form Files</Filter>
     </ClCompile>
+    <ClCompile Include="SqlLiteManager.cpp">
+      <Filter>Source Files\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="GlobalEventProvider.h">
@@ -139,6 +142,9 @@
       <Filter>Header Files\ContextMenu</Filter>
     </ClInclude>
     <ClInclude Include="OsgEarthTaskExecutor.h">
+      <Filter>Header Files\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="OsgSqlLiteManager.h">
       <Filter>Header Files\Manager</Filter>
     </ClInclude>
   </ItemGroup>

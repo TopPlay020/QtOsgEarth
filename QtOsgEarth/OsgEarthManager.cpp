@@ -63,7 +63,11 @@ void OsgEarthManager::loadEarthFile(const QString& fileName) {
 	}
 
 	// Load the .earth file using osgEarth
-	earthNode = osgDB::readNodeFile(fileName.toStdString());
+	if (fileName.endsWith(".earth"))
+		earthNode = osgDB::readNodeFile(fileName.toStdString());
+	else
+		earthNode = osgDB::readNodeFile("D:/Tools_GIS/QtOsgEarthv2.0/default.earth");
+
 	if (earthNode)
 	{
 		// Cast the loaded node to a MapNode
@@ -72,6 +76,11 @@ void OsgEarthManager::loadEarthFile(const QString& fileName) {
 			setupSky();
 		root->addChild(earthNode);
 	}
+	if (fileName.endsWith(".osgBegh"))
+		for (auto layer : g_osgSqlLiteManager->loadSqlFile(fileName.toStdString())) {
+			addLayer(layer);
+		}
+
 	activeFile = fileName;
 	if (isReloding)
 		notifyFileReloadingEnd(true);
@@ -135,11 +144,11 @@ osgEarth::GeoPoint OsgEarthManager::getMouseCoordinatesInGeoPoint(int mouseX, in
 
 osg::Vec3d OsgEarthManager::getMouseCoordinates(int mouseX, int mouseY) {
 	auto geoPoint = getMouseCoordinatesInGeoPoint(mouseX, mouseY);
-	if(geoPoint == nullptr)
+	if (geoPoint == nullptr)
 		return osg::Vec3d(200, 200, 200);
-	double longitude = geoPoint.x(); 
-	double latitude = geoPoint.y();  
-	double altitude = geoPoint.z(); 
+	double longitude = geoPoint.x();
+	double latitude = geoPoint.y();
+	double altitude = geoPoint.z();
 	return osg::Vec3d(longitude, latitude, altitude);
 }
 
